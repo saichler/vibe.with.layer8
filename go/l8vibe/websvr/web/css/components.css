@@ -1,0 +1,224 @@
+/* Component Styles - Wabi-Sabi Influenced */
+
+/* Login Screen */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--space-l);
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.brand-section {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  z-index: 10;
+  position: relative;
+}
+
+.login-form {
+  width: 100%;
+  z-index: 10;
+  position: relative;
+}
+
+/* Project Screen */
+.project-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--space-l);
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  z-index: 10;
+  position: relative;
+}
+
+.project-form {
+  width: 100%;
+  z-index: 10;
+  position: relative;
+}
+
+/* Status Indicators */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stone-medium);
+  display: inline-block;
+  margin-right: var(--space-xs);
+  transition: all 0.3s ease;
+}
+
+.status-dot.active {
+  background: var(--moss-green);
+  box-shadow: 0 0 8px rgba(90, 107, 79, 0.4);
+}
+
+/* Control Buttons */
+.control-btn {
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-m);
+  border: 1px solid var(--stone-medium);
+  background: var(--stone-light);
+  color: var(--stone-dark);
+  border-radius: var(--border-radius-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+  background: var(--clay-warm);
+  border-color: var(--stone-dark);
+}
+
+.control-btn.active {
+  background: var(--earth-brown);
+  color: var(--paper-white);
+  border-color: var(--earth-brown);
+}
+
+/* Send Button */
+.send-button {
+  background: transparent;
+  border: none;
+  color: var(--stone-dark);
+  padding: var(--space-s);
+  cursor: pointer;
+  border-radius: var(--border-radius-soft);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-button:hover {
+  color: var(--earth-brown);
+  background: var(--stone-light);
+}
+
+.send-button:active {
+  color: var(--rust-orange);
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  color: var(--stone-dark);
+  padding: var(--space-2xl);
+}
+
+.empty-icon {
+  margin-bottom: var(--space-l);
+  opacity: 0.6;
+}
+
+.empty-state h4 {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  margin-bottom: var(--space-s);
+  color: var(--charcoal);
+}
+
+.empty-state p {
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--stone-medium);
+  border-top: 2px solid var(--earth-brown);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-container,
+  .project-container {
+    padding: var(--space-m);
+  }
+  
+  .brand-section,
+  .header-section {
+    margin-bottom: var(--space-xl);
+  }
+  
+  .empty-state {
+    padding: var(--space-l);
+  }
+  
+  .empty-state p {
+    font-size: var(--font-size-sm);
+  }
+}

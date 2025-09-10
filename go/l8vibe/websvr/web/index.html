@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe with Layer 8 Ecosystem</title>
+    <link rel="stylesheet" href="css/wabi-sabi.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/workspace.css">
+    <link rel="stylesheet" href="css/marketing.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Marketing Landing Page -->
+        <div id="marketingScreen" class="screen active">
+            <!-- Navigation Header -->
+            <header class="marketing-header">
+                <div class="header-container">
+                    <div class="logo-section">
+                        <h2 class="logo">Layer 8</h2>
+                        <span class="tagline">Ecosystem</span>
+                    </div>
+                    <nav class="nav-menu">
+                        <button id="aboutCTA" class="nav-link-button">About</button>
+                        <a href="#features" class="nav-link">Features</a>
+                        <a href="#architecture" class="nav-link">Architecture</a>
+                        <button id="createProjectCTA" class="wabi-button secondary disabled" disabled>Create Project</button>
+                        <button id="loginCTA" class="wabi-button secondary">Sign In</button>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-container">
+                    <div class="wabi-circle large"></div>
+                    <div class="hero-content">
+                        <h1 class="hero-title">Professional Vibing with<br>Layer 8 Ecosystem</h1>
+                        <p class="hero-subtitle">The Layer 8 Ecosystem was designed by AI, for AI, delivering enterprise-grade security, scalability, concurrency, quality, and deployment for next-generation AI-Vibed applications. With its intelligent architecture and built-in best practices, Layer 8 transforms ideas into production-ready solutions.<br><br>Turn your vision into an enterprise-grade application through AI-powered collaboration and elegant architecture.</p>
+                        <div class="hero-actions">
+                            <button id="getStartedBtn" class="wabi-button primary large">Start Your Journey</button>
+                            <button class="wabi-button secondary" onclick="document.getElementById('architecture').scrollIntoView({behavior: 'smooth'})">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="flow-diagram">
+                            <div class="flow-step">
+                                <div class="step-icon">🎨</div>
+                                <span>Vibe Website</span>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="step-icon">📊</div>
+                                <span>Vibe Data</span>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="step-icon">⚡</div>
+                                <span>Deploy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="architecture-section">
+                <div class="section-container">
+                    <div class="section-header">
+                        <h2 class="section-title">The Layer 8 Architecture</h2>
+                        <p class="section-subtitle">A seamless journey from concept to enterprise deployment</p>
+                    </div>
+                    
+                    <div class="architecture-flow">
+                        <div class="arch-step">
+                            <div class="step-number">01</div>
+                            <div class="step-content">
+                                <h3>Vibe Website</h3>
+                                <p>Start by vibing your perfect website interface with AI. Design, iterate, and perfect your vision through natural conversation.</p>
+                                <div class="step-features">
+                                    <span class="feature-tag">AI-Powered Design</span>
+                                    <span class="feature-tag">Real-time Preview</span>
+                                </div>
+                            </div>
+                            <div class="step-visual website-visual"></div>
+                        </div>
+
+                        <div class="arch-step reverse">
+                            <div class="step-number">02</div>
+                            <div class="step-content">
+                                <h3>Vibe Mock Data</h3>
+                                <p>Generate realistic mock data that perfectly fits your application. Let AI understand your data needs and create meaningful test datasets.</p>
+                                <div class="step-features">
+                                    <span class="feature-tag">Smart Data Generation</span>
+                                    <span class="feature-tag">Contextual Content</span>
+                                </div>
+                            </div>
+                            <div class="step-visual data-visual"></div>
+                        </div>
+
+                        <div class="arch-step">
+                            <div class="step-number">03</div>
+                            <div class="step-content">
+                                <h3>Vibe Protobuf Model</h3>
+                                <p>Transform your data structures into efficient Protobuf models. Ensure type safety and performance across your entire application stack.</p>
+                                <div class="step-features">
+                                    <span class="feature-tag">Type Safety</span>
+                                    <span class="feature-tag">Cross-Platform</span>
+                                </div>
+                            </div>
+                            <div class="step-visual protobuf-visual"></div>
+                        </div>
+
+                        <div class="arch-step reverse">
+                            <div class="step-number">04</div>
+                            <div class="step-content">
+                                <h3>Layer 8 Enterprise Backend</h3>
+                                <p>Automatically wire your application with enterprise-grade, secured backend infrastructure. Built-in security, scalability, and monitoring.</p>
+                                <div class="step-features">
+                                    <span class="feature-tag">Enterprise Security</span>
+                                    <span class="feature-tag">Auto-Scaling</span>
+                                    <span class="feature-tag">Monitoring</span>
+                                </div>
+                            </div>
+                            <div class="step-visual backend-visual"></div>
+                        </div>
+
+                        <div class="arch-step">
+                            <div class="step-number">05</div>
+                            <div class="step-content">
+                                <h3>Choose Deployment</h3>
+                                <p>Select your preferred deployment strategy. From cloud-native Kubernetes to traditional servers, we've got you covered.</p>
+                                <div class="step-features">
+                                    <span class="feature-tag">Multi-Cloud</span>
+                                    <span class="feature-tag">Kubernetes Ready</span>
+                                    <span class="feature-tag">Edge Computing</span>
+                                </div>
+                            </div>
+                            <div class="step-visual deployment-visual"></div>
+                        </div>
+
+                        <div class="arch-step reverse final">
+                            <div class="step-number">06</div>
+                            <div class="step-content">
+                                <h3>Deploy & Enjoy</h3>
+                                <p>Launch your enterprise-grade application with confidence. Monitor, scale, and iterate as your business grows.</p>
+                                <div class="step-features">
+                                    <span class="feature-tag">One-Click Deploy</span>
+                                    <span class="feature-tag">Auto-Monitoring</span>
+                                    <span class="feature-tag">Continuous Updates</span>
+                                </div>
+                            </div>
+                            <div class="step-visual enjoy-visual"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="features-section">
+                <div class="section-container">
+                    <div class="section-header">
+                        <h2 class="section-title">Why Layer 8 Ecosystem?</h2>
+                        <p class="section-subtitle">Built for modern enterprises who value both elegance and performance</p>
+                    </div>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🤖</div>
+                            <h3>AI-First Development</h3>
+                            <p>Collaborate with AI to build exactly what you envision, from UI to data models.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <h3>Enterprise Security</h3>
+                            <p>Built-in security best practices, compliance ready, and enterprise-grade encryption.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <h3>Lightning Fast</h3>
+                            <p>Optimized performance with Protobuf serialization and efficient data structures.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🔄</div>
+                            <h3>Auto-Scaling</h3>
+                            <p>Scales from startup to enterprise without code changes or infrastructure headaches.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🎨</div>
+                            <h3>Beautiful Design</h3>
+                            <p>Wabi-Sabi inspired interfaces that are both functional and aesthetically pleasing.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <h3>Rapid Deployment</h3>
+                            <p>From idea to production in hours, not months. Focus on your business logic.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <div class="cta-container">
+                    <div class="wabi-texture"></div>
+                    <div class="cta-content">
+                        <h2>Ready to Transform Your Development?</h2>
+                        <p>Join thousands of developers building the future with Layer 8 Ecosystem</p>
+                        <button id="ctaStartBtn" class="wabi-button primary large">Start Building Today</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="marketing-footer">
+                <div class="footer-container">
+                    <div class="footer-content">
+                        <div class="footer-brand">
+                            <h3>Layer 8 Ecosystem</h3>
+                            <p>Professional vibing for enterprise applications</p>
+                        </div>
+                        <div class="footer-links">
+                            <div class="link-group">
+                                <h4>Platform</h4>
+                                <a href="#features">Features</a>
+                                <a href="#architecture">Architecture</a>
+                                <a href="#">Documentation</a>
+                            </div>
+                            <div class="link-group">
+                                <h4>Company</h4>
+                                <a href="#">About</a>
+                                <a href="#">Contact</a>
+                                <a href="#">Support</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; 2025 Layer 8 Ecosystem. Crafted with care for enterprise excellence.</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- About Modal -->
+        <div id="aboutModal" class="modal large-modal">
+            <div class="modal-content large-modal-content">
+                <div class="modal-header">
+                    <h2>About Layer 8 Ecosystem</h2>
+                    <button class="modal-close" id="closeAbout">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="about-intro">
+                        <p class="about-subtitle">A comprehensive collection of modular, interoperable services designed by AI, for AI</p>
+                        <p>The Layer 8 Ecosystem represents a paradigm shift in distributed systems development. Built from the ground up with AI-first principles, our ecosystem provides enterprise-grade components that work seamlessly together to create production-ready applications.</p>
+                    </div>
+
+                    <div class="projects-grid">
+                        <!-- Types & Ecosystem Interfaces -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Types & Ecosystem Interfaces</h3>
+                                <span class="project-tag core">Core</span>
+                            </div>
+                            <p class="project-description">Foundational library for distributed networking systems providing VNic interfaces, service discovery, security frameworks, and advanced type systems with runtime reflection.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">Virtual Network Interface</span>
+                                <span class="feature-pill">Service Discovery</span>
+                                <span class="feature-pill">8-Level Priority System</span>
+                                <span class="feature-pill">AES Encryption</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8types" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Ecosystem Utilities -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Ecosystem Utilities</h3>
+                                <span class="project-tag foundation">Foundation</span>
+                            </div>
+                            <p class="project-description">Comprehensive utility library providing high-performance queues, logging, security providers, and thread-safe components for microservices architecture.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">Lock-free Operations</span>
+                                <span class="feature-pill">Priority Queues</span>
+                                <span class="feature-pill">TLS Management</span>
+                                <span class="feature-pill">Connection Pooling</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8utils" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Network As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Network As a Service</h3>
+                                <span class="project-tag service">Service</span>
+                            </div>
+                            <p class="project-description">Comprehensive microservices ecosystem with virtual network overlay, UDP service discovery, health monitoring, and intelligent message routing.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">Virtual Network Overlay</span>
+                                <span class="feature-pill">Auto Connection Management</span>
+                                <span class="feature-pill">Health Monitoring</span>
+                                <span class="feature-pill">Message Routing</span>
+                            </div>
+                            <a href="https://github.com/saichler/layer8" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- API & Concurrency As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>API & Concurrency As a Service</h3>
+                                <span class="project-tag service">Service</span>
+                            </div>
+                            <p class="project-description">Advanced distributed services framework with ACID transactions, 2-phase commit protocol, distributed caching, and service orchestration capabilities.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">ACID Transactions</span>
+                                <span class="feature-pill">2-Phase Commit</span>
+                                <span class="feature-pill">Distributed Caching</span>
+                                <span class="feature-pill">Service Orchestration</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8services" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Serialization As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Serialization As a Service</h3>
+                                <span class="project-tag performance">Performance</span>
+                            </div>
+                            <p class="project-description">High-performance cross-platform serialization with 2-4x faster encoding, 50-70% memory reduction, and microsecond-level latency for distributed systems.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">2-4x Faster</span>
+                                <span class="feature-pill">70% Less Memory</span>
+                                <span class="feature-pill">Cross-Platform</span>
+                                <span class="feature-pill">Microsecond Latency</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8srlz" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Protobuf As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Protobuf As a Service</h3>
+                                <span class="project-tag core">Core</span>
+                            </div>
+                            <p class="project-description">Advanced Go reflection utility providing deep cloning, property management, change tracking, and comprehensive introspection for complex data structures.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">Deep Cloning</span>
+                                <span class="feature-pill">Change Tracking</span>
+                                <span class="feature-pill">Property Management</span>
+                                <span class="feature-pill">Type-Safe Operations</span>
+                            </div>
+                            <a href="https://github.com/saichler/reflect" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Web As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Web As a Service</h3>
+                                <span class="project-tag service">Service</span>
+                            </div>
+                            <p class="project-description">Full HTTP REST server and client with Protocol Buffers integration, SSL/TLS support, and tight integration with Layer 8's proximity-based routing.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">REST API</span>
+                                <span class="feature-pill">SSL/TLS Support</span>
+                                <span class="feature-pill">Protocol Buffers</span>
+                                <span class="feature-pill">Auto Discovery</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8web" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Service Query Language -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Service Query Language</h3>
+                                <span class="project-tag query">Query</span>
+                            </div>
+                            <p class="project-description">SQL-like query language for graph models in Go structs with deep path navigation, pattern matching, sorting, and runtime introspection capabilities.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">SQL-like Syntax</span>
+                                <span class="feature-pill">Graph Queries</span>
+                                <span class="feature-pill">Pattern Matching</span>
+                                <span class="feature-pill">Zero Dependencies</span>
+                            </div>
+                            <a href="https://github.com/saichler/gsql" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- ORM & Storage As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>ORM & Storage As a Service</h3>
+                                <span class="project-tag storage">Storage</span>
+                            </div>
+                            <p class="project-description">Distributed, scalable ORM with native PostgreSQL integration, Protocol Buffers serialization, and REST API endpoints for modern applications.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">Horizontal Scaling</span>
+                                <span class="feature-pill">PostgreSQL Native</span>
+                                <span class="feature-pill">Auto Transactions</span>
+                                <span class="feature-pill">REST Integration</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8orm" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Inventory As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Inventory As a Service</h3>
+                                <span class="project-tag management">Management</span>
+                            </div>
+                            <p class="project-description">Generic distributed inventory cache for network devices and Kubernetes resources with SQL-like queries and real-time updates via REST APIs.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">Multi-Model Support</span>
+                                <span class="feature-pill">SQL-like Queries</span>
+                                <span class="feature-pill">Real-time Updates</span>
+                                <span class="feature-pill">K8s Integration</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8inventory" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+
+                        <!-- Quality As a Service -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Quality As a Service</h3>
+                                <span class="project-tag testing">Testing</span>
+                            </div>
+                            <p class="project-description">Comprehensive testing infrastructure with multi-node topologies, distributed caching tests, security validation, and automated HTML coverage reporting.</p>
+                            <div class="project-features">
+                                <span class="feature-pill">Multi-node Testing</span>
+                                <span class="feature-pill">Security Tests</span>
+                                <span class="feature-pill">Coverage Reports</span>
+                                <span class="feature-pill">Plugin System</span>
+                            </div>
+                            <a href="https://github.com/saichler/l8test" target="_blank" class="project-link">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                    <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                </svg>
+                                View Repository
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Project Modal -->
+        <div id="createProjectModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Create Your Vision</h2>
+                    <button class="modal-close" id="closeCreateProject">&times;</button>
+                </div>
+                <div class="modal-body project-modal-body">
+                    <p class="modal-subtitle">Every masterpiece begins with intention</p>
+                    <div class="project-form">
+                        <div class="input-group">
+                            <label for="modalProjectName">Project Name</label>
+                            <input type="text" id="modalProjectName" placeholder="Enter project name" required>
+                            <div class="input-line"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="modalProjectDescription">Description</label>
+                            <textarea id="modalProjectDescription" placeholder="Describe your vision..." rows="4"></textarea>
+                            <div class="input-line"></div>
+                        </div>
+                        <div class="button-group">
+                            <button id="modalCreateProjectBtn" class="wabi-button primary full-width">Create Project</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Welcome Back</h2>
+                    <button class="modal-close" id="closeLogin">&times;</button>
+                </div>
+                <div class="login-form">
+                    <div class="input-group">
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                        <div class="input-line"></div>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <div class="input-line"></div>
+                    </div>
+                    <button id="loginBtn" class="wabi-button primary full-width">Begin Your Journey</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Creation Screen -->
+        <div id="projectScreen" class="screen">
+            <div class="project-container">
+                <div class="header-section">
+                    <h2 class="section-title">Create Your Vision</h2>
+                    <p class="section-subtitle">Every masterpiece begins with intention</p>
+                </div>
+                <div class="project-form">
+                    <div class="input-group">
+                        <label for="projectName">Project Name</label>
+                        <input type="text" id="projectName" placeholder="Enter project name" required>
+                        <div class="input-line"></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="projectDescription">Description</label>
+                        <textarea id="projectDescription" placeholder="Describe your vision..." rows="4"></textarea>
+                        <div class="input-line"></div>
+                    </div>
+                    <div class="button-group">
+                        <button id="createProjectBtn" class="wabi-button primary">Create Project</button>
+                        <button id="logoutBtn" class="wabi-button secondary">Sign Out</button>
+                    </div>
+                </div>
+                <div class="wabi-stones"></div>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div id="workspaceScreen" class="screen">
+            <div class="workspace-layout">
+                <!-- Header -->
+                <header class="workspace-header">
+                    <div class="header-content">
+                        <div class="project-info">
+                            <h1 id="currentProjectName" class="project-name">Project Name</h1>
+                            <span class="project-status">Active Session</span>
+                        </div>
+                        <div class="header-actions">
+                            <button id="newProjectBtn" class="wabi-button secondary">New Project</button>
+                            <button id="workspaceLogoutBtn" class="wabi-button secondary">Sign Out</button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Main Content -->
+                <main class="workspace-main">
+                    <!-- Chat Panel -->
+                    <div class="chat-panel">
+                        <div class="chat-header">
+                            <h3>AI Collaboration</h3>
+                            <div class="chat-status">
+                                <div class="status-dot active"></div>
+                                <span>Connected</span>
+                            </div>
+                        </div>
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message ai-message">
+                                <div class="message-content">
+                                    <p>Welcome to your creative journey. I'm here to help you build your vision. What would you like to create today?</p>
+                                </div>
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <div class="chat-input-group">
+                                <input type="text" id="chatInput" placeholder="Share your vision..." />
+                                <button id="sendChatBtn" class="send-button">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Panel -->
+                    <div class="preview-panel">
+                        <div class="preview-header">
+                            <h3>Workspace Preview</h3>
+                            <div class="preview-controls">
+                                <button class="control-btn active" data-view="desktop">Desktop</button>
+                                <button class="control-btn" data-view="tablet">Tablet</button>
+                                <button class="control-btn" data-view="mobile">Mobile</button>
+                            </div>
+                        </div>
+                        <div class="preview-container">
+                            <iframe id="previewFrame" class="preview-iframe desktop-view" src="about:blank"></iframe>
+                            <div class="empty-state" id="emptyState">
+                                <div class="empty-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21,15 16,10 5,21"></polyline>
+                                    </svg>
+                                </div>
+                                <h4>Your Canvas Awaits</h4>
+                                <p>Start a conversation with AI to begin creating your web application</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/workspace.js"></script>
+    <script src="js/marketing.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
