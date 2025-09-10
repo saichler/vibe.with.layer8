@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.chat.types";
+option go_package = "./types";
+
+message Chat {
+  string chat = 1;
+  string response = 2;
+}

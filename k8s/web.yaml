@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: l8vibe-webui
+  labels:
+    name: l8vibe-webui
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8vibe-webui
+  name: l8vibe-webui
+  labels:
+    app: l8vibe-webui
+spec:
+  selector:
+    matchLabels:
+      app: l8vibe-webui
+  template:
+    metadata:
+      labels:
+        app: l8vibe-webui
+    spec:
+      hostNetwork: true
+      containers:
+        - name: l8vibe-webui
+          image: saichler/l8vibe-web:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP

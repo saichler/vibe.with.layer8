@@ -1,4 +1,4 @@
-FROM saichler/probler-builder:latest AS build
+FROM saichler/builder:latest AS build
 
 RUN git clone https://github.com/saichler/l8utils
 RUN go mod init

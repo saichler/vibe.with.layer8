@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: l8vibe-vnet
+  labels:
+    name: l8vibe-vnet
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8vibe-vnet
+  name: l8vibe-vnet
+  labels:
+    app: l8vibe-vnet
+spec:
+  selector:
+    matchLabels:
+      app: l8vibe-vnet
+  template:
+    metadata:
+      labels:
+        app: l8vibe-vnet
+    spec:
+      hostNetwork: true
+      containers:
+        - name: l8vibe-vnet
+          image: saichler/l8vibe-vnet:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 23333
