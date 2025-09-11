@@ -57,6 +57,18 @@ func TestGenerateProjectsQuery(t *testing.T) {
 		return
 	}
 	fmt.Println(string(jsn))
+	project := &types.Project{}
+	project.User = "<user>"
+	project.Description = "<description>"
+	project.Name = "<name>"
+	project.ApiKey = "<api_key>"
+	jsn, err = protojson.Marshal(project)
+	if err != nil {
+		res.Logger().Fail(t, e.Error())
+		return
+	}
+	fmt.Println(string(jsn))
+
 }
 
 /*

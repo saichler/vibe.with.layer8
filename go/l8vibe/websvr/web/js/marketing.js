@@ -217,8 +217,10 @@ class MarketingManager {
             // Clear form
             const projectNameInput = document.getElementById('modalProjectName');
             const projectDescInput = document.getElementById('modalProjectDescription');
+            const apiKeyInput = document.getElementById('modalClaudeApiKey');
             if (projectNameInput) projectNameInput.value = '';
             if (projectDescInput) projectDescInput.value = '';
+            if (apiKeyInput) apiKeyInput.value = '';
         }
     }
 

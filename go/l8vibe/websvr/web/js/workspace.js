@@ -68,15 +68,23 @@ class WorkspaceManager {
     async handleCreateProject(isModal = false) {
         const nameInput = document.getElementById(isModal ? 'modalProjectName' : 'projectName');
         const descInput = document.getElementById(isModal ? 'modalProjectDescription' : 'projectDescription');
+        const apiKeyInput = document.getElementById(isModal ? 'modalClaudeApiKey' : 'claudeApiKey');
         const createBtn = document.getElementById(isModal ? 'modalCreateProjectBtn' : 'createProjectBtn');
         
         const projectName = nameInput?.value?.trim();
         const projectDesc = descInput?.value?.trim();
+        const apiKey = apiKeyInput?.value?.trim();
 
         // Validation
         if (!projectName) {
             auth.showError('Please enter a project name');
             nameInput?.focus();
+            return;
+        }
+
+        if (!apiKey) {
+            auth.showError('Please enter your Claude.ai API key');
+            apiKeyInput?.focus();
             return;
         }
 
@@ -88,27 +96,56 @@ class WorkspaceManager {
         }
 
         try {
-            // Create project object
-            const project = {
-                id: this.generateProjectId(),
+            const currentUser = auth.getCurrentUser();
+            if (!currentUser) {
+                throw new Error('User not authenticated');
+            }
+
+            // Prepare request body
+            const requestBody = {
                 name: projectName,
                 description: projectDesc || '',
-                createdAt: new Date().toISOString(),
-                owner: auth.getCurrentUser()?.email,
-                status: 'active'
+                user: currentUser.email,
+                apiKey: apiKey
             };
 
-            // Store project
-            this.currentProject = project;
+            console.log('Creating project with data:', { ...requestBody, apiKey: '[REDACTED]' });
+
+            // Make POST request to create project
+            const response = await fetch('/l8vibe/0/proj', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            const createdProject = await response.json();
+            console.log('Project created successfully:', createdProject);
+
+            // Store project locally
+            this.currentProject = createdProject;
             this.storeCurrentProject();
 
             // Initialize chat for this project
             if (window.chat) {
-                chat.setCurrentProject(project);
+                chat.setCurrentProject(createdProject);
             }
 
             // Update workspace UI
             this.updateProjectDisplay();
+
+            // Refresh the projects menu to show the new project
+            if (window.marketing && window.auth.isUserAuthenticated()) {
+                setTimeout(() => {
+                    marketing.loadUserProjects();
+                }, 500);
+            }
 
             // Show success and navigate
             auth.showSuccess(`Project "${projectName}" created successfully!`);
@@ -126,8 +163,9 @@ class WorkspaceManager {
             }, 1000);
 
         } catch (error) {
-            auth.showError('Failed to create project. Please try again.');
+            auth.showError(`Failed to create project: ${error.message}`);
             console.error('Project creation error:', error);
+            // Don't navigate to workspace on failure
         } finally {
             // Reset button state
             if (createBtn) {
