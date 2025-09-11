@@ -45,7 +45,7 @@ class Application {
         marketing.init();
         
         // Now that all modules are initialized, check authentication and set initial screen
-        auth.checkStoredAuth();
+        await auth.checkStoredAuth();
         
         // Load any stored project
         workspace.loadStoredProject();

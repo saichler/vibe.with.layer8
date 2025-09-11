@@ -422,13 +422,9 @@ class MarketingManager {
     }
 
     // Open Projects menu dropdown
-    async openProjectsMenu() {
+    openProjectsMenu() {
         const projectsMenu = document.querySelector('.projects-menu');
         if (projectsMenu) {
-            // Check if user is authenticated
-            if (window.auth && window.auth.isUserAuthenticated()) {
-                await this.loadUserProjects();
-            }
             projectsMenu.classList.add('active');
         }
     }
@@ -471,7 +467,7 @@ class MarketingManager {
             };
 
             // Make API call to fetch projects with body as URL parameter
-            const url = new URL('/l8vide/0/proj', window.location.origin);
+            const url = new URL('/l8vibe/0/proj', window.location.origin);
             url.searchParams.append('body', JSON.stringify(requestBody));
             
             const response = await fetch(url, {

@@ -95,6 +95,9 @@ class AuthManager {
             // Enable Projects menu
             this.enableProjectsMenu();
             
+            // Load user projects immediately after login
+            await this.loadUserProjectsAfterLogin();
+            
             // Close login modal
             this.closeLoginModal();
             
@@ -184,7 +187,7 @@ class AuthManager {
     }
 
     // Check for stored authentication
-    checkStoredAuth() {
+    async checkStoredAuth() {
         // Skip localStorage operations for file:// protocol
         if (window.location.protocol === 'file:') {
             console.warn('localStorage not available with file:// protocol');
@@ -208,6 +211,9 @@ class AuthManager {
                     
                     // Enable Projects menu
                     this.enableProjectsMenu();
+                    
+                    // Load user projects immediately after restoring auth
+                    await this.loadUserProjectsAfterLogin();
                     
                     // Update Sign In button to Sign Out
                     this.updateSignInButton();
@@ -345,6 +351,13 @@ class AuthManager {
     disableProjectsMenu() {
         if (window.marketing) {
             marketing.disableProjectsMenu();
+        }
+    }
+
+    // Load user projects after successful login
+    async loadUserProjectsAfterLogin() {
+        if (window.marketing) {
+            await marketing.loadUserProjects();
         }
     }
 
