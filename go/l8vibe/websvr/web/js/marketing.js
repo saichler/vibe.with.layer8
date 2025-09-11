@@ -25,7 +25,8 @@ class MarketingManager {
             });
         }
 
-        // Projects Menu button
+        // Projects Menu button - temporarily disabled
+        /*
         const projectsMenuBtn = document.getElementById('projectsMenuBtn');
         if (projectsMenuBtn) {
             projectsMenuBtn.addEventListener('click', (e) => {
@@ -41,6 +42,7 @@ class MarketingManager {
                 this.closeProjectsMenu();
             }
         });
+        */
 
         // Login CTA buttons
         const loginCTA = document.getElementById('loginCTA');

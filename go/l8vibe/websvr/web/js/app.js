@@ -3,6 +3,7 @@ class Application {
     constructor() {
         this.currentScreen = null;
         this.initialized = false;
+        this.screenChanging = false;
     }
 
     // Initialize the application
@@ -32,27 +33,45 @@ class Application {
 
     // Initialize all application modules
     initializeModules() {
+        console.log('Creating global instances...');
         // Create global instances
         window.auth = new AuthManager();
         window.chat = new ChatManager();
         window.workspace = new WorkspaceManager();
         window.marketing = new MarketingManager();
         
+        console.log('Initializing modules...');
         // Initialize modules in order
         auth.init();
+        console.log('Auth initialized');
         chat.init();
+        console.log('Chat initialized');
         workspace.init();
+        console.log('Workspace initialized');
         marketing.init();
+        console.log('Marketing initialized');
         
+        console.log('Checking stored auth...');
         // Now that all modules are initialized, check authentication and set initial screen
         auth.checkStoredAuth();
+        console.log('Auth check complete');
         
+        console.log('Loading stored project...');
         // Load any stored project
-        workspace.loadStoredProject();
+        // workspace.loadStoredProject(); // Temporarily disabled to fix infinite loop
+        console.log('Module initialization complete');
     }
 
     // Show specific screen
     showScreen(screenId) {
+        if (this.screenChanging) {
+            console.log(`Screen change already in progress, ignoring request for ${screenId}`);
+            return;
+        }
+        
+        this.screenChanging = true;
+        console.log(`Showing screen: ${screenId}`);
+        
         // Hide all screens
         const screens = document.querySelectorAll('.screen');
         screens.forEach(screen => {
@@ -64,12 +83,15 @@ class Application {
         if (targetScreen) {
             targetScreen.classList.add('active');
             this.currentScreen = screenId;
+            console.log(`Screen ${screenId} activated`);
             
             // Handle screen-specific logic
             this.handleScreenTransition(screenId);
         } else {
             console.error(`Screen ${screenId} not found`);
         }
+        
+        this.screenChanging = false;
     }
 
     // Handle screen transition logic

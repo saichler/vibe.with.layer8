@@ -93,7 +93,7 @@ class AuthManager {
             this.enableCreateProjectButton();
             
             // Enable Projects menu
-            this.enableProjectsMenu();
+            // this.enableProjectsMenu(); // Temporarily disabled
             
             // Close login modal
             this.closeLoginModal();
@@ -131,7 +131,7 @@ class AuthManager {
         this.disableCreateProjectButton();
         
         // Disable Projects menu
-        this.disableProjectsMenu();
+        // this.disableProjectsMenu(); // Temporarily disabled
         
         // Reset Sign Out button back to Sign In
         this.resetSignInButton();
@@ -185,6 +185,7 @@ class AuthManager {
 
     // Check for stored authentication
     checkStoredAuth() {
+        console.log('checkStoredAuth called');
         // Skip localStorage operations for file:// protocol
         if (window.location.protocol === 'file:') {
             console.warn('localStorage not available with file:// protocol');
@@ -207,18 +208,22 @@ class AuthManager {
                     this.enableCreateProjectButton();
                     
                     // Enable Projects menu
-                    this.enableProjectsMenu();
+                    // this.enableProjectsMenu(); // Temporarily disabled
                     
                     // Update Sign In button to Sign Out
                     this.updateSignInButton();
                     
                     // Navigate to appropriate screen based on stored project
                     const storedProject = localStorage.getItem('l8vibe_current_project');
+                    console.log('Stored project:', storedProject);
                     if (storedProject) {
+                        console.log('Navigating to workspace screen');
                         app.showScreen('workspaceScreen');
                     } else {
+                        console.log('Navigating to marketing screen');
                         app.showScreen('marketingScreen');
                     }
+                    console.log('checkStoredAuth complete - authenticated path');
                     return;
                 }
             }
@@ -227,8 +232,10 @@ class AuthManager {
         }
         
         // Default to marketing screen
+        console.log('Defaulting to marketing screen');
         this.clearStoredAuth();
         app.showScreen('marketingScreen');
+        console.log('checkStoredAuth complete');
     }
 
     // Clear stored authentication
