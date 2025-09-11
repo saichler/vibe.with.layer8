@@ -11,6 +11,7 @@ import (
 	"github.com/saichler/layer8/go/overlay/vnic"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/common"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/consts"
+	types2 "github.com/saichler/vibe.with.layer8/go/types"
 )
 
 func main() {
@@ -61,4 +62,5 @@ func registerTypes(resources ifs.IResources) {
 	resources.Registry().Register(&types.Query{})
 	resources.Registry().Register(&types.Top{})
 	resources.Registry().Register(&types.Empty{})
+	resources.Registry().Register(&types2.Chat{})
 }
