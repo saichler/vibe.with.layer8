@@ -20,7 +20,7 @@ func main() {
 	nic.WaitForConnection()
 
 	nic.Resources().Registry().Register(&service.ChatService{})
-	nic.Resources().Services().Activate(service.ServiceType, "", 0, resources, nil)
+	nic.Resources().Services().Activate(service.ServiceType, service.ServiceName, service.ServiceArea, resources, nil)
 
 	resources.Logger().Info("Chat started!")
 	resources.Logger().SetLogLevel(ifs.Error_Level)
