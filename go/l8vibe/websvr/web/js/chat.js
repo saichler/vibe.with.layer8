@@ -77,8 +77,8 @@ class ChatManager {
             this.removeTypingIndicator(typingId);
             
             // Add AI response
-            if (response && response.message) {
-                this.addMessage(response.message, 'ai');
+            if (response && response.response) {
+                this.addMessage(response.response, 'ai');
                 
                 // Handle any workspace updates
                 if (response.workspace_update) {

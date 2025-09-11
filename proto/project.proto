@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.chat.types";
+option go_package = "./types";
+
+message ProjectList {
+  map<string, Project> list = 1;
+}
+
+message Project {
+  string name = 1;
+  string user = 2;
+  string api_key = 3;
+}
