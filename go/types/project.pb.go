@@ -72,9 +72,10 @@ type Project struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name   string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	User   string `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
-	ApiKey string `protobuf:"bytes,3,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
+	Name     string     `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	User     string     `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	ApiKey   string     `protobuf:"bytes,3,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
+	Messages []*Message `protobuf:"bytes,4,rep,name=messages,proto3" json:"messages,omitempty"`
 }
 
 func (x *Project) Reset() {
@@ -130,6 +131,336 @@ func (x *Project) GetApiKey() string {
 	return ""
 }
 
+func (x *Project) GetMessages() []*Message {
+	if x != nil {
+		return x.Messages
+	}
+	return nil
+}
+
+type ClaudeRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Model     string     `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"`
+	MaxTokens int64      `protobuf:"varint,2,opt,name=max_tokens,json=maxTokens,proto3" json:"max_tokens,omitempty"`
+	Messages  []*Message `protobuf:"bytes,3,rep,name=messages,proto3" json:"messages,omitempty"`
+}
+
+func (x *ClaudeRequest) Reset() {
+	*x = ClaudeRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_project_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ClaudeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClaudeRequest) ProtoMessage() {}
+
+func (x *ClaudeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_project_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClaudeRequest.ProtoReflect.Descriptor instead.
+func (*ClaudeRequest) Descriptor() ([]byte, []int) {
+	return file_project_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ClaudeRequest) GetModel() string {
+	if x != nil {
+		return x.Model
+	}
+	return ""
+}
+
+func (x *ClaudeRequest) GetMaxTokens() int64 {
+	if x != nil {
+		return x.MaxTokens
+	}
+	return 0
+}
+
+func (x *ClaudeRequest) GetMessages() []*Message {
+	if x != nil {
+		return x.Messages
+	}
+	return nil
+}
+
+type ClaudeResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id         string     `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Type       string     `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Role       string     `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"`
+	Content    []*Content `protobuf:"bytes,4,rep,name=content,proto3" json:"content,omitempty"`
+	Model      string     `protobuf:"bytes,5,opt,name=model,proto3" json:"model,omitempty"`
+	StopReason string     `protobuf:"bytes,6,opt,name=stop_reason,json=stopReason,proto3" json:"stop_reason,omitempty"`
+	Usage      *Usage     `protobuf:"bytes,7,opt,name=usage,proto3" json:"usage,omitempty"`
+}
+
+func (x *ClaudeResponse) Reset() {
+	*x = ClaudeResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_project_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ClaudeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClaudeResponse) ProtoMessage() {}
+
+func (x *ClaudeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_project_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClaudeResponse.ProtoReflect.Descriptor instead.
+func (*ClaudeResponse) Descriptor() ([]byte, []int) {
+	return file_project_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ClaudeResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ClaudeResponse) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *ClaudeResponse) GetRole() string {
+	if x != nil {
+		return x.Role
+	}
+	return ""
+}
+
+func (x *ClaudeResponse) GetContent() []*Content {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+func (x *ClaudeResponse) GetModel() string {
+	if x != nil {
+		return x.Model
+	}
+	return ""
+}
+
+func (x *ClaudeResponse) GetStopReason() string {
+	if x != nil {
+		return x.StopReason
+	}
+	return ""
+}
+
+func (x *ClaudeResponse) GetUsage() *Usage {
+	if x != nil {
+		return x.Usage
+	}
+	return nil
+}
+
+type Message struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Role    string `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	Content string `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+}
+
+func (x *Message) Reset() {
+	*x = Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_project_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Message) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Message) ProtoMessage() {}
+
+func (x *Message) ProtoReflect() protoreflect.Message {
+	mi := &file_project_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Message.ProtoReflect.Descriptor instead.
+func (*Message) Descriptor() ([]byte, []int) {
+	return file_project_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Message) GetRole() string {
+	if x != nil {
+		return x.Role
+	}
+	return ""
+}
+
+func (x *Message) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+type Content struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type string `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Text string `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+}
+
+func (x *Content) Reset() {
+	*x = Content{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_project_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Content) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Content) ProtoMessage() {}
+
+func (x *Content) ProtoReflect() protoreflect.Message {
+	mi := &file_project_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Content.ProtoReflect.Descriptor instead.
+func (*Content) Descriptor() ([]byte, []int) {
+	return file_project_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Content) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *Content) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+type Usage struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	InputTokens  int32 `protobuf:"varint,1,opt,name=input_tokens,json=inputTokens,proto3" json:"input_tokens,omitempty"`
+	OutputTokens int32 `protobuf:"varint,2,opt,name=output_tokens,json=outputTokens,proto3" json:"output_tokens,omitempty"`
+}
+
+func (x *Usage) Reset() {
+	*x = Usage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_project_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Usage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Usage) ProtoMessage() {}
+
+func (x *Usage) ProtoReflect() protoreflect.Message {
+	mi := &file_project_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Usage.ProtoReflect.Descriptor instead.
+func (*Usage) Descriptor() ([]byte, []int) {
+	return file_project_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *Usage) GetInputTokens() int32 {
+	if x != nil {
+		return x.InputTokens
+	}
+	return 0
+}
+
+func (x *Usage) GetOutputTokens() int32 {
+	if x != nil {
+		return x.OutputTokens
+	}
+	return 0
+}
+
 var File_project_proto protoreflect.FileDescriptor
 
 var file_project_proto_rawDesc = []byte{
@@ -143,14 +474,49 @@ var file_project_proto_rawDesc = []byte{
 	0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x24, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
 	0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x50,
 	0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38,
-	0x01, 0x22, 0x4a, 0x0a, 0x07, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x12, 0x0a, 0x04,
+	0x01, 0x22, 0x76, 0x0a, 0x07, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x12, 0x0a, 0x04,
 	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
 	0x12, 0x12, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
 	0x75, 0x73, 0x65, 0x72, 0x12, 0x17, 0x0a, 0x07, 0x61, 0x70, 0x69, 0x5f, 0x6b, 0x65, 0x79, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x70, 0x69, 0x4b, 0x65, 0x79, 0x42, 0x22, 0x0a,
-	0x0e, 0x63, 0x6f, 0x6d, 0x2e, 0x63, 0x68, 0x61, 0x74, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x42,
-	0x05, 0x54, 0x79, 0x70, 0x65, 0x73, 0x50, 0x01, 0x5a, 0x07, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65,
-	0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x70, 0x69, 0x4b, 0x65, 0x79, 0x12, 0x2a, 0x0a,
+	0x08, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x0e, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52,
+	0x08, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x22, 0x70, 0x0a, 0x0d, 0x43, 0x6c, 0x61,
+	0x75, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6d, 0x6f,
+	0x64, 0x65, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6d, 0x6f, 0x64, 0x65, 0x6c,
+	0x12, 0x1d, 0x0a, 0x0a, 0x6d, 0x61, 0x78, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x6d, 0x61, 0x78, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x12,
+	0x2a, 0x0a, 0x08, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x0e, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
+	0x65, 0x52, 0x08, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x22, 0xcd, 0x01, 0x0a, 0x0e,
+	0x43, 0x6c, 0x61, 0x75, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12,
+	0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79,
+	0x70, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x12, 0x28, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e,
+	0x74, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e,
+	0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74,
+	0x12, 0x14, 0x0a, 0x05, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x74, 0x6f, 0x70, 0x5f, 0x72,
+	0x65, 0x61, 0x73, 0x6f, 0x6e, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x74, 0x6f,
+	0x70, 0x52, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x12, 0x22, 0x0a, 0x05, 0x75, 0x73, 0x61, 0x67, 0x65,
+	0x18, 0x07, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0c, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x55,
+	0x73, 0x61, 0x67, 0x65, 0x52, 0x05, 0x75, 0x73, 0x61, 0x67, 0x65, 0x22, 0x37, 0x0a, 0x07, 0x4d,
+	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f,
+	0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e,
+	0x74, 0x65, 0x6e, 0x74, 0x22, 0x31, 0x0a, 0x07, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12,
+	0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74,
+	0x79, 0x70, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x65, 0x78, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x74, 0x65, 0x78, 0x74, 0x22, 0x4f, 0x0a, 0x05, 0x55, 0x73, 0x61, 0x67, 0x65,
+	0x12, 0x21, 0x0a, 0x0c, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0b, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x73, 0x12, 0x23, 0x0a, 0x0d, 0x6f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x5f, 0x74, 0x6f,
+	0x6b, 0x65, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0c, 0x6f, 0x75, 0x74, 0x70,
+	0x75, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x42, 0x22, 0x0a, 0x0e, 0x63, 0x6f, 0x6d, 0x2e,
+	0x63, 0x68, 0x61, 0x74, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x42, 0x05, 0x54, 0x79, 0x70, 0x65,
+	0x73, 0x50, 0x01, 0x5a, 0x07, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -165,20 +531,29 @@ func file_project_proto_rawDescGZIP() []byte {
 	return file_project_proto_rawDescData
 }
 
-var file_project_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_project_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_project_proto_goTypes = []interface{}{
-	(*ProjectList)(nil), // 0: types.ProjectList
-	(*Project)(nil),     // 1: types.Project
-	nil,                 // 2: types.ProjectList.ListEntry
+	(*ProjectList)(nil),    // 0: types.ProjectList
+	(*Project)(nil),        // 1: types.Project
+	(*ClaudeRequest)(nil),  // 2: types.ClaudeRequest
+	(*ClaudeResponse)(nil), // 3: types.ClaudeResponse
+	(*Message)(nil),        // 4: types.Message
+	(*Content)(nil),        // 5: types.Content
+	(*Usage)(nil),          // 6: types.Usage
+	nil,                    // 7: types.ProjectList.ListEntry
 }
 var file_project_proto_depIdxs = []int32{
-	2, // 0: types.ProjectList.list:type_name -> types.ProjectList.ListEntry
-	1, // 1: types.ProjectList.ListEntry.value:type_name -> types.Project
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	7, // 0: types.ProjectList.list:type_name -> types.ProjectList.ListEntry
+	4, // 1: types.Project.messages:type_name -> types.Message
+	4, // 2: types.ClaudeRequest.messages:type_name -> types.Message
+	5, // 3: types.ClaudeResponse.content:type_name -> types.Content
+	6, // 4: types.ClaudeResponse.usage:type_name -> types.Usage
+	1, // 5: types.ProjectList.ListEntry.value:type_name -> types.Project
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_project_proto_init() }
@@ -211,6 +586,66 @@ func file_project_proto_init() {
 				return nil
 			}
 		}
+		file_project_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ClaudeRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_project_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ClaudeResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_project_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_project_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Content); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_project_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Usage); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -218,7 +653,7 @@ func file_project_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_project_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

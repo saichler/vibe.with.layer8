@@ -16,6 +16,7 @@ func ParseAndCreateFiles(resposeFilename, path string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	resp := &types.ClaudeResponse{}
 	err = json.Unmarshal(data, resp)
 	if err != nil {
@@ -23,15 +24,14 @@ func ParseAndCreateFiles(resposeFilename, path string) ([]string, error) {
 	}
 
 	var result []string
-	for _, content := range resp.Content {
-		lines, e := parseAndCreateFiles(content.Text, path)
-		if e != nil {
-			fmt.Println(e)
-			continue
-		}
-		if lines != nil {
-			result = append(result, lines...)
-		}
+	content := resp.Content[len(resp.Content)-1]
+	lines, e := parseAndCreateFiles(content.Text, path)
+	if e != nil {
+		fmt.Println(e)
+		return result, e
+	}
+	if lines != nil {
+		result = append(result, lines...)
 	}
 	return result, nil
 }

@@ -36,19 +36,20 @@ func NewAnthropicClient(apiKey string) *AnthropicClient {
 	return &AnthropicClient{apiKey: apiKey, httpClient: httpClient}
 }
 
-func (this AnthropicClient) Do(text string) (*http.Response, error) {
+func (this AnthropicClient) Do(text string, project *types.Project) error {
 	body := &types.ClaudeRequest{}
 	body.Model = consts.ANTHROPIC_MODEL
 	body.MaxTokens = 64000
-	body.Messages = []*types.Message{&types.Message{Role: "user", Content: text}}
+	body.Messages = project.Messages
+	body.Messages = append(body.Messages, &types.Message{Role: "user", Content: text})
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	request, err := http.NewRequest("POST", consts.ANTHROPIC_API, bytes.NewReader(jsonBody))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set(consts.ANTHROPIC_HEADER_VERSION, consts.ANTHROPIC_HEADER_VERSION_VALUE)
@@ -56,7 +57,7 @@ func (this AnthropicClient) Do(text string) (*http.Response, error) {
 
 	response, err := this.httpClient.Do(request)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	var jsonBytes []byte
@@ -71,15 +72,23 @@ func (this AnthropicClient) Do(text string) (*http.Response, error) {
 
 	ok, err := is200(response.Status)
 	if err != nil {
-		return nil, err
+		return err
 	}
+
 	if !ok {
-		return nil, errors.New("failed with status " + response.Status + ":" + string(jsonBytes))
+		return errors.New("failed with status " + response.Status + ":" + string(jsonBytes))
 	}
 
-	os.WriteFile("respond.json", jsonBytes, 0777)
+	resp := &types.ClaudeResponse{}
+	err = json.Unmarshal(jsonBytes, resp)
+	if err != nil {
+		return err
+	}
 
-	return response, nil
+	project.Messages = append(project.Messages,
+		&types.Message{Role: "assistant", Content: resp.Content[len(resp.Content)-1].Text})
+
+	return nil
 }
 
 func is200(status string) (bool, error) {

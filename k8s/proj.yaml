@@ -1,32 +1,32 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: l8vibe-chat
+  name: l8vibe-proj
   labels:
-    name: l8vibe-chat
+    name: l8vibe-proj
 
 ---
 
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  namespace: l8vibe-chat
-  name: l8vibe-chat
+  namespace: l8vibe-proj
+  name: l8vibe-proj
   labels:
-    app: l8vibe-chat
+    app: l8vibe-proj
 spec:
   selector:
     matchLabels:
-      app: l8vibe-chat
+      app: l8vibe-proj
   template:
     metadata:
       labels:
-        app: l8vibe-chat
+        app: l8vibe-proj
     spec:
       hostNetwork: true
       containers:
-        - name: l8vibe-chat
-          image: saichler/l8vibe-chat:latest
+        - name: l8vibe-proj
+          image: saichler/l8vibe-proj:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
