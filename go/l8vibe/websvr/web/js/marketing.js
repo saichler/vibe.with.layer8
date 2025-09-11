@@ -23,14 +23,22 @@ class MarketingManager {
             });
         }
 
-        // Create Project CTA button
-        const createProjectCTA = document.getElementById('createProjectCTA');
-        if (createProjectCTA) {
-            createProjectCTA.addEventListener('click', (e) => {
+        // Projects Menu button
+        const projectsMenuBtn = document.getElementById('projectsMenuBtn');
+        if (projectsMenuBtn) {
+            projectsMenuBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.showCreateProjectModal();
+                this.toggleProjectsMenu();
             });
         }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const projectsMenu = document.querySelector('.projects-menu');
+            if (projectsMenu && !projectsMenu.contains(e.target)) {
+                this.closeProjectsMenu();
+            }
+        });
 
         // Login CTA buttons
         const loginCTA = document.getElementById('loginCTA');
@@ -399,6 +407,170 @@ class MarketingManager {
     // Check if marketing manager is initialized
     isInitialized() {
         return this.initialized;
+    }
+
+    // Toggle Projects menu dropdown
+    toggleProjectsMenu() {
+        const projectsMenu = document.querySelector('.projects-menu');
+        if (projectsMenu) {
+            if (projectsMenu.classList.contains('active')) {
+                this.closeProjectsMenu();
+            } else {
+                this.openProjectsMenu();
+            }
+        }
+    }
+
+    // Open Projects menu dropdown
+    async openProjectsMenu() {
+        const projectsMenu = document.querySelector('.projects-menu');
+        if (projectsMenu) {
+            // Check if user is authenticated
+            if (window.auth && window.auth.isUserAuthenticated()) {
+                await this.loadUserProjects();
+            }
+            projectsMenu.classList.add('active');
+        }
+    }
+
+    // Close Projects menu dropdown
+    closeProjectsMenu() {
+        const projectsMenu = document.querySelector('.projects-menu');
+        if (projectsMenu) {
+            projectsMenu.classList.remove('active');
+        }
+    }
+
+    // Load user projects from API
+    async loadUserProjects() {
+        const dropdown = document.getElementById('projectsDropdown');
+        if (!dropdown) return;
+
+        try {
+            const currentUser = window.auth.getCurrentUser();
+            if (!currentUser) return;
+
+            // Show loading state
+            dropdown.innerHTML = '<div class="project-item">Loading...</div>';
+
+            // Prepare the request body as specified
+            const requestBody = {
+                text: `select * from project where user=${currentUser.email}`,
+                rootType: "project",
+                properties: ["*"],
+                criteria: {
+                    condition: {
+                        comparator: {
+                            left: "user",
+                            oper: "=",
+                            right: currentUser.email
+                        }
+                    }
+                },
+                matchCase: true
+            };
+
+            // Make API call to fetch projects with body as URL parameter
+            const url = new URL('/l8vide/0/proj', window.location.origin);
+            url.searchParams.append('body', JSON.stringify(requestBody));
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const projectList = await response.json();
+
+            // Populate dropdown with projects
+            this.populateProjectsDropdown(projectList);
+
+        } catch (error) {
+            console.error('Error loading projects:', error);
+            dropdown.innerHTML = '<div class="project-item">Error loading projects</div>';
+        }
+    }
+
+    // Populate the projects dropdown menu
+    populateProjectsDropdown(projectList) {
+        const dropdown = document.getElementById('projectsDropdown');
+        if (!dropdown) return;
+
+        let html = '';
+
+        // Add user projects if any exist
+        if (projectList && projectList.length > 0) {
+            projectList.forEach(project => {
+                html += `<a href="#" class="project-item" data-project-id="${project.id || ''}">${project.name || 'Unnamed Project'}</a>`;
+            });
+            
+            // Add separator
+            html += '<div class="projects-separator"></div>';
+        }
+
+        // Add "Create Project" menu item
+        html += '<a href="#" class="create-project-item" id="createProjectFromMenu">Create Project</a>';
+
+        dropdown.innerHTML = html;
+
+        // Bind click events for project items
+        this.bindProjectMenuEvents();
+    }
+
+    // Bind events for project menu items
+    bindProjectMenuEvents() {
+        // Handle project item clicks
+        const projectItems = document.querySelectorAll('.project-item[data-project-id]');
+        projectItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const projectId = item.getAttribute('data-project-id');
+                this.openProject(projectId);
+                this.closeProjectsMenu();
+            });
+        });
+
+        // Handle "Create Project" click
+        const createProjectItem = document.getElementById('createProjectFromMenu');
+        if (createProjectItem) {
+            createProjectItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showCreateProjectModal();
+                this.closeProjectsMenu();
+            });
+        }
+    }
+
+    // Open a specific project
+    openProject(projectId) {
+        // Implementation to open the selected project
+        console.log('Opening project:', projectId);
+        // This would typically navigate to the workspace or load the project
+        // For now, just log the action
+    }
+
+    // Enable Projects menu when user signs in
+    enableProjectsMenu() {
+        const projectsMenuBtn = document.getElementById('projectsMenuBtn');
+        if (projectsMenuBtn) {
+            projectsMenuBtn.disabled = false;
+            projectsMenuBtn.classList.remove('disabled');
+        }
+    }
+
+    // Disable Projects menu when user signs out
+    disableProjectsMenu() {
+        const projectsMenuBtn = document.getElementById('projectsMenuBtn');
+        if (projectsMenuBtn) {
+            projectsMenuBtn.disabled = true;
+            projectsMenuBtn.classList.add('disabled');
+        }
+        this.closeProjectsMenu();
     }
 
     // Cleanup (if needed)

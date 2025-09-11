@@ -92,6 +92,9 @@ class AuthManager {
             // Enable Create Project button
             this.enableCreateProjectButton();
             
+            // Enable Projects menu
+            this.enableProjectsMenu();
+            
             // Close login modal
             this.closeLoginModal();
             
@@ -126,6 +129,9 @@ class AuthManager {
 
         // Disable Create Project button
         this.disableCreateProjectButton();
+        
+        // Disable Projects menu
+        this.disableProjectsMenu();
         
         // Reset Sign Out button back to Sign In
         this.resetSignInButton();
@@ -199,6 +205,9 @@ class AuthManager {
                     
                     // Enable Create Project button
                     this.enableCreateProjectButton();
+                    
+                    // Enable Projects menu
+                    this.enableProjectsMenu();
                     
                     // Update Sign In button to Sign Out
                     this.updateSignInButton();
@@ -322,6 +331,20 @@ class AuthManager {
         if (createProjectBtn) {
             createProjectBtn.disabled = true;
             createProjectBtn.classList.add('disabled');
+        }
+    }
+
+    // Enable Projects menu
+    enableProjectsMenu() {
+        if (window.marketing) {
+            marketing.enableProjectsMenu();
+        }
+    }
+
+    // Disable Projects menu
+    disableProjectsMenu() {
+        if (window.marketing) {
+            marketing.disableProjectsMenu();
         }
     }
 
