@@ -121,6 +121,6 @@ func (this *ProjectService) TransactionConfig() ifs.ITransactionConfig {
 // WebService returns the web service
 func (this *ProjectService) WebService() ifs.IWebService {
 	ws := web.New(ServiceName, ServiceArea, &types.Project{},
-		&types.Project{}, nil, nil, nil, nil, nil, nil, &types.Project{}, &types.ProjectList{})
+		&types.Project{}, nil, nil, nil, nil, nil, nil, &types2.Query{}, &types.ProjectList{})
 	return ws
 }
