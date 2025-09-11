@@ -28,6 +28,7 @@ type ProjectService struct {
 func (this *ProjectService) Activate(serviceName string, serviceArea byte, resources ifs.IResources, listener ifs.IServiceCacheListener, args ...interface{}) error {
 	resources.Registry().Register(&types.Project{})
 	resources.Registry().Register(&types.ProjectList{})
+	resources.Registry().Register(&types2.Query{})
 	resources.Introspector().Inspect(&types.Project{})
 	this.cache = dcache.NewDistributedCache(ServiceName, ServiceArea, "Project", resources.SysConfig().LocalUuid, listener, resources)
 	return nil
