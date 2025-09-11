@@ -2,6 +2,8 @@
 class MarketingManager {
     constructor() {
         this.initialized = false;
+        this.projectsLoaded = false;
+        this.userProjects = null;
     }
 
     // Initialize marketing page functionality
@@ -422,9 +424,14 @@ class MarketingManager {
     }
 
     // Open Projects menu dropdown
-    openProjectsMenu() {
+    async openProjectsMenu() {
         const projectsMenu = document.querySelector('.projects-menu');
         if (projectsMenu) {
+            // Load projects if not already loaded and user is authenticated
+            if (!this.projectsLoaded && window.auth && window.auth.isUserAuthenticated()) {
+                await this.loadUserProjects();
+                this.projectsLoaded = true;
+            }
             projectsMenu.classList.add('active');
         }
     }
@@ -483,6 +490,9 @@ class MarketingManager {
 
             const projectList = await response.json();
 
+            // Store projects for future use
+            this.userProjects = projectList;
+            
             // Populate dropdown with projects
             this.populateProjectsDropdown(projectList);
 
@@ -567,6 +577,9 @@ class MarketingManager {
             projectsMenuBtn.classList.add('disabled');
         }
         this.closeProjectsMenu();
+        // Clear cached projects
+        this.projectsLoaded = false;
+        this.userProjects = null;
     }
 
     // Cleanup (if needed)

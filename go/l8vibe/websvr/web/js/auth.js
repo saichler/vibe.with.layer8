@@ -95,9 +95,6 @@ class AuthManager {
             // Enable Projects menu
             this.enableProjectsMenu();
             
-            // Load user projects immediately after login
-            this.loadUserProjectsAfterLogin();
-            
             // Close login modal
             this.closeLoginModal();
             
@@ -211,9 +208,6 @@ class AuthManager {
                     
                     // Enable Projects menu
                     this.enableProjectsMenu();
-                    
-                    // Load user projects immediately after restoring auth
-                    this.loadUserProjectsAfterLogin();
                     
                     // Update Sign In button to Sign Out
                     this.updateSignInButton();
@@ -354,15 +348,6 @@ class AuthManager {
         }
     }
 
-    // Load user projects after successful login
-    loadUserProjectsAfterLogin() {
-        if (window.marketing) {
-            // Use setTimeout to avoid blocking the main thread
-            setTimeout(() => {
-                marketing.loadUserProjects();
-            }, 100);
-        }
-    }
 
     // Close login modal
     closeLoginModal() {
