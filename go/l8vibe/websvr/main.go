@@ -64,4 +64,5 @@ func registerTypes(resources ifs.IResources) {
 	resources.Registry().Register(&types.Empty{})
 	resources.Registry().Register(&types2.Project{})
 	resources.Registry().Register(&types2.ProjectList{})
+	resources.Introspector().Inspect(&types2.Project{})
 }

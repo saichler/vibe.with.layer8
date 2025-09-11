@@ -424,14 +424,10 @@ class MarketingManager {
     }
 
     // Open Projects menu dropdown
-    async openProjectsMenu() {
+    openProjectsMenu() {
         const projectsMenu = document.querySelector('.projects-menu');
         if (projectsMenu) {
-            // Load projects if not already loaded and user is authenticated
-            if (!this.projectsLoaded && window.auth && window.auth.isUserAuthenticated()) {
-                await this.loadUserProjects();
-                this.projectsLoaded = true;
-            }
+            // Simply show the dropdown - projects should already be loaded
             projectsMenu.classList.add('active');
         }
     }
@@ -495,10 +491,14 @@ class MarketingManager {
             
             // Populate dropdown with projects
             this.populateProjectsDropdown(projectList);
+            
+            // Mark projects as loaded
+            this.projectsLoaded = true;
 
         } catch (error) {
             console.error('Error loading projects:', error);
             dropdown.innerHTML = '<div class="project-item">Error loading projects</div>';
+            this.projectsLoaded = true; // Still mark as loaded to prevent retry loops
         }
     }
 
