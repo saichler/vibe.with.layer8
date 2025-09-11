@@ -13,9 +13,10 @@ message ProjectList {
 
 message Project {
   string name = 1;
-  string user = 2;
-  string api_key = 3;
-  repeated Message messages = 4;
+  string description = 2;
+  string user = 3;
+  string api_key = 4;
+  repeated Message messages = 5;
 }
 
 message ClaudeRequest {
