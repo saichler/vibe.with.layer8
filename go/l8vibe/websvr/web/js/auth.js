@@ -93,7 +93,7 @@ class AuthManager {
             this.enableCreateProjectButton();
             
             // Enable Projects menu
-            // this.enableProjectsMenu(); // Temporarily disabled
+            this.enableProjectsMenu();
             
             // Close login modal
             this.closeLoginModal();
@@ -131,7 +131,7 @@ class AuthManager {
         this.disableCreateProjectButton();
         
         // Disable Projects menu
-        // this.disableProjectsMenu(); // Temporarily disabled
+        this.disableProjectsMenu();
         
         // Reset Sign Out button back to Sign In
         this.resetSignInButton();
@@ -208,7 +208,7 @@ class AuthManager {
                     this.enableCreateProjectButton();
                     
                     // Enable Projects menu
-                    // this.enableProjectsMenu(); // Temporarily disabled
+                    this.enableProjectsMenu();
                     
                     // Update Sign In button to Sign Out
                     this.updateSignInButton();
