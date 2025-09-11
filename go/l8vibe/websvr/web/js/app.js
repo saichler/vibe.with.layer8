@@ -6,12 +6,12 @@ class Application {
     }
 
     // Initialize the application
-    async init() {
+    init() {
         if (this.initialized) return;
 
         try {
             // Initialize all modules
-            await this.initializeModules();
+            this.initializeModules();
             
             // Set up global error handling
             this.setupErrorHandling();
@@ -31,7 +31,7 @@ class Application {
     }
 
     // Initialize all application modules
-    async initializeModules() {
+    initializeModules() {
         // Create global instances
         window.auth = new AuthManager();
         window.chat = new ChatManager();
@@ -258,7 +258,7 @@ class Application {
 }
 
 // Initialize application when DOM is loaded
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Check if running from file:// protocol
     if (window.location.protocol === 'file:') {
         console.warn('Running from file:// protocol. Some features may not work properly.');
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Initialize the application with error handling
     try {
-        await app.init();
+        app.init();
     } catch (error) {
         console.error('Failed to initialize application:', error);
         // Show basic version if initialization fails
