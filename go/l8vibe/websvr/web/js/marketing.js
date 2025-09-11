@@ -443,11 +443,17 @@ class MarketingManager {
     // Load user projects from API
     async loadUserProjects() {
         const dropdown = document.getElementById('projectsDropdown');
-        if (!dropdown) return;
+        if (!dropdown) {
+            console.error('Projects dropdown not found');
+            return;
+        }
 
         try {
             const currentUser = window.auth.getCurrentUser();
-            if (!currentUser) return;
+            if (!currentUser) {
+                console.error('No current user found');
+                return;
+            }
 
             // Show loading state
             dropdown.innerHTML = '<div class="project-item">Loading...</div>';
@@ -497,7 +503,8 @@ class MarketingManager {
 
         } catch (error) {
             console.error('Error loading projects:', error);
-            dropdown.innerHTML = '<div class="project-item">Error loading projects</div>';
+            // Even on error, still show Create Project option
+            this.populateProjectsDropdown([]);
             this.projectsLoaded = true; // Still mark as loaded to prevent retry loops
         }
     }
@@ -505,23 +512,32 @@ class MarketingManager {
     // Populate the projects dropdown menu
     populateProjectsDropdown(projectList) {
         const dropdown = document.getElementById('projectsDropdown');
-        if (!dropdown) return;
+        if (!dropdown) {
+            console.error('Dropdown element not found when populating projects');
+            return;
+        }
 
         let html = '';
 
+        console.log('Populating projects dropdown with:', projectList);
+
         // Add user projects if any exist
         if (projectList && projectList.length > 0) {
+            console.log(`Adding ${projectList.length} projects to dropdown`);
             projectList.forEach(project => {
                 html += `<a href="#" class="project-item" data-project-id="${project.id || ''}">${project.name || 'Unnamed Project'}</a>`;
             });
             
             // Add separator
             html += '<div class="projects-separator"></div>';
+        } else {
+            console.log('No projects found, showing only Create Project option');
         }
 
-        // Add "Create Project" menu item
+        // Always add "Create Project" menu item
         html += '<a href="#" class="create-project-item" id="createProjectFromMenu">Create Project</a>';
 
+        console.log('Setting dropdown HTML:', html);
         dropdown.innerHTML = html;
 
         // Bind click events for project items
@@ -530,8 +546,11 @@ class MarketingManager {
 
     // Bind events for project menu items
     bindProjectMenuEvents() {
+        console.log('Binding project menu events');
+        
         // Handle project item clicks
         const projectItems = document.querySelectorAll('.project-item[data-project-id]');
+        console.log(`Found ${projectItems.length} project items to bind`);
         projectItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -544,11 +563,15 @@ class MarketingManager {
         // Handle "Create Project" click
         const createProjectItem = document.getElementById('createProjectFromMenu');
         if (createProjectItem) {
+            console.log('Found Create Project item, binding click event');
             createProjectItem.addEventListener('click', (e) => {
                 e.preventDefault();
+                console.log('Create Project clicked from menu');
                 this.showCreateProjectModal();
                 this.closeProjectsMenu();
             });
+        } else {
+            console.error('Create Project item not found in dropdown');
         }
     }
 
