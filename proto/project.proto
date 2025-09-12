@@ -8,7 +8,7 @@ option java_package = "com.chat.types";
 option go_package = "./types";
 
 message ProjectList {
-  map<string, Project> list = 1;
+  repeated Project list = 1;
 }
 
 message Project {
