@@ -492,7 +492,8 @@ class MarketingManager {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const projectList = await response.json();
+            const responseData = await response.json();
+            const projectList = responseData.list || [];
 
             // Store projects for future use
             this.userProjects = projectList;

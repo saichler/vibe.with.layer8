@@ -2,6 +2,7 @@ package service
 
 import (
 	"os"
+	strings2 "strings"
 
 	"github.com/saichler/l8services/go/services/dcache"
 	"github.com/saichler/l8srlz/go/serialize/object"
@@ -31,7 +32,41 @@ func (this *ProjectService) Activate(serviceName string, serviceArea byte, resou
 	resources.Registry().Register(&types2.Query{})
 	resources.Introspector().Inspect(&types.Project{})
 	this.cache = dcache.NewDistributedCache(ServiceName, ServiceArea, "Project", resources.SysConfig().LocalUuid, listener, resources)
+	this.load(resources)
 	return nil
+}
+
+func (this *ProjectService) load(resources ifs.IResources) {
+	users, err := os.ReadDir("/data")
+	if err != nil {
+		resources.Logger().Error("Failed to load users")
+		return
+	}
+	for _, user := range users {
+		projects, err := os.ReadDir("/data/" + user.Name())
+		if err != nil {
+			resources.Logger().Error("Failed to load projects")
+			return
+		}
+		for _, project := range projects {
+			if strings2.Contains(project.Name(), ".dat") {
+				data, er := os.ReadFile("/data/" + user.Name() + "/" + project.Name())
+				if er != nil {
+					resources.Logger().Error("#1 Failed to load project " + project.Name())
+					continue
+				}
+				proj := &types.Project{}
+				er = proto.Unmarshal(data, proj)
+				if er != nil {
+					resources.Logger().Error("#2 Failed to load project " + project.Name())
+					continue
+				}
+				key := strings.New(proj.User, proj.Name).String()
+				this.cache.Put(key, proj, true)
+				resources.Logger().Info("Loaded project " + project.Name())
+			}
+		}
+	}
 }
 
 // DeActivate deactivates the ProjectService
