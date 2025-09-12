@@ -8,5 +8,6 @@ RUN go build -o proj
 
 FROM saichler/l8vibe-security:latest AS final
 COPY --from=build /home/src/github.com/saichler/build/proj /home/run/proj
+COPY hoa.data /home/run/hoa.data
 
 ENTRYPOINT ["/home/run/proj"]

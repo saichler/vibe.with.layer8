@@ -41,6 +41,7 @@ func (this AnthropicClient) Do(text string, project *types.Project) error {
 	body.MaxTokens = 64000
 	body.Messages = project.Messages
 	body.Messages = append(body.Messages, &types.Message{Role: "user", Content: text})
+	project.Messages = body.Messages
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
 		return err

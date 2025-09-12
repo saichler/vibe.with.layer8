@@ -98,7 +98,18 @@ func testAnthropic(t *testing.T) {
 }
 
 func TestAnthropicResponse(t *testing.T) {
-	lines, err := antropic.ParseAndCreateFiles("project1.data")
+	/*
+		data, _ := os.ReadFile("project1.data")
+		project := &types.Project{}
+		proto.Unmarshal(data, project)
+		project.Messages = append(project.Messages, &types.Message{Role: "user", Content: "create a website for hoa management. separate javascript and css to separate files."})
+		msg := project.Messages[0]
+		project.Messages = project.Messages[1:]
+		project.Messages = append(project.Messages, msg)
+		data, _ = proto.Marshal(project)
+		os.WriteFile("project2.data", data, 0777)
+	*/
+	lines, err := antropic.ParseAndCreateFiles("project2.data")
 	if err != nil {
 		t.Fail()
 		fmt.Println(err)
