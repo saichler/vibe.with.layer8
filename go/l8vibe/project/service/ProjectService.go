@@ -62,8 +62,9 @@ func (this *ProjectService) load(resources ifs.IResources) {
 					continue
 				}
 				key := strings.New(proj.User, proj.Name).String()
+				resources.Logger().Info("Loaded project "+proj.Name+" with ", len(proj.Messages))
 				this.cache.Put(key, proj, true)
-				resources.Logger().Info("Loaded project " + project.Name())
+				resources.Logger().Info("Loaded project " + proj.Name)
 			}
 		}
 	}

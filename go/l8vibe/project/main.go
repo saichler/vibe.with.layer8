@@ -11,8 +11,6 @@ import (
 )
 
 func main() {
-	data, _ := os.ReadFile("./hoa.data")
-	os.WriteFile("/data/saichler@gmail.com/hoa.dat", data, 0777)
 	resources := common.Resources("l8vibe-proj-"+os.Getenv("HOSTNAME"), consts.VNET_PORT)
 	resources.Logger().SetLogLevel(ifs.Info_Level)
 
