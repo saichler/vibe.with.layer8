@@ -77,15 +77,41 @@ class ChatManager {
             this.removeTypingIndicator(typingId);
             
             // Add AI response from the project response
-            if (response && response.messages && response.messages.length > 0) {
+            console.log('PATCH Response:', response);
+            console.log('Response type:', typeof response);
+            console.log('Response structure:', JSON.stringify(response, null, 2));
+            
+            // The response has a 'list' array containing the project
+            let project = response;
+            if (response && typeof response === 'object') {
+                // Check if response has a list array with project data
+                if (response.list && Array.isArray(response.list) && response.list.length > 0) {
+                    project = response.list[0];
+                } else if (response.project) {
+                    project = response.project;
+                } else if (response.element) {
+                    project = response.element;
+                } else if (response.data) {
+                    project = response.data;
+                }
+            }
+            
+            console.log('Extracted project:', project);
+            console.log('Project messages:', project?.messages);
+            
+            if (project && project.messages && project.messages.length > 0) {
+                console.log('Found messages in project, count:', project.messages.length);
                 // Find the assistant message from the response
-                const assistantMessage = response.messages.find(msg => msg.role === 'assistant');
+                const assistantMessage = project.messages.find(msg => msg.role === 'assistant');
+                console.log('Assistant message found:', assistantMessage);
                 if (assistantMessage && assistantMessage.content) {
                     this.addMessage(assistantMessage.content, 'ai');
                 } else {
+                    console.log('No assistant message with content found');
                     this.addMessage("I'm here to help you create amazing web applications. What would you like to build?", 'ai');
                 }
             } else {
+                console.log('No messages found in project');
                 this.addMessage("I'm here to help you create amazing web applications. What would you like to build?", 'ai');
             }
 
