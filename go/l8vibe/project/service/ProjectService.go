@@ -80,25 +80,32 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 	if ok {
 		key := strings.New(project.User, project.Name).String()
 		this.cache.Post(key, project, elements.Notification())
-
-		data, err := proto.Marshal(project)
-		if err != nil {
-			return object.NewError(vnic.Resources().Logger().Error("Post Error 1:", err.Error()).Error())
-		}
-
-		projectPath := strings.New("/data/", project.User, "/").String()
-		err = os.MkdirAll(projectPath, 0777)
-		if err != nil {
-			return object.NewError(vnic.Resources().Logger().Error("Post Error 0:", err.Error()).Error())
-		}
-
-		projectFileName := strings.New(projectPath, project.Name, ".dat").String()
-		err = os.WriteFile(projectFileName, data, 0777)
-		if err != nil {
-			return object.NewError(vnic.Resources().Logger().Error("Post Error 2:", err.Error()).Error())
+		pb := saveProject(project, vnic)
+		if pb != nil {
+			return pb
 		}
 	}
 	return object.New(nil, project)
+}
+
+func saveProject(project *types.Project, vnic ifs.IVNic) ifs.IElements {
+	data, err := proto.Marshal(project)
+	if err != nil {
+		return object.NewError(vnic.Resources().Logger().Error("Post Error 1:", err.Error()).Error())
+	}
+
+	projectPath := strings.New("/data/", project.User, "/").String()
+	err = os.MkdirAll(projectPath, 0777)
+	if err != nil {
+		return object.NewError(vnic.Resources().Logger().Error("Post Error 0:", err.Error()).Error())
+	}
+
+	projectFileName := strings.New(projectPath, project.Name, ".dat").String()
+	err = os.WriteFile(projectFileName, data, 0777)
+	if err != nil {
+		return object.NewError(vnic.Resources().Logger().Error("Post Error 2:", err.Error()).Error())
+	}
+	return nil
 }
 
 // Put handles PUT requests
@@ -108,7 +115,22 @@ func (this *ProjectService) Put(elements ifs.IElements, vnic ifs.IVNic) ifs.IEle
 
 // Patch handles PATCH requests
 func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
-	return nil
+	project, ok := elements.Element().(*types.Project)
+	if !ok {
+		return object.NewError(vnic.Resources().Logger().Error("Patch Error 1:").Error())
+	}
+	project.Messages = append(project.Messages, &types.Message{Role: "assistant", Content: "Echo "})
+
+	key := strings.New(project.User, project.Name).String()
+	this.cache.Patch(key, project, elements.Notification())
+	elem := this.cache.Get(key)
+	if elem == nil {
+		return object.NewError(vnic.Resources().Logger().Error("Patch Error 2:").Error())
+	}
+	inProject := elem.(*types.Project)
+	saveProject(inProject, vnic)
+
+	return object.New(nil, project)
 }
 
 // Delete handles DELETE requests
@@ -166,6 +188,6 @@ func (this *ProjectService) TransactionConfig() ifs.ITransactionConfig {
 // WebService returns the web service
 func (this *ProjectService) WebService() ifs.IWebService {
 	ws := web.New(ServiceName, ServiceArea, &types.Project{},
-		&types.Project{}, nil, nil, nil, nil, nil, nil, &types2.Query{}, &types.ProjectList{})
+		&types.Project{}, nil, nil, &types.Project{}, &types.Project{}, nil, nil, &types2.Query{}, &types.ProjectList{})
 	return ws
 }

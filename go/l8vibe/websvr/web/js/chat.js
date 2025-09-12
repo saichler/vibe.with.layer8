@@ -70,19 +70,20 @@ class ChatManager {
         if (chatInput) chatInput.disabled = true;
 
         try {
-            // Send message to API
-            const response = await this.sendToAPI(userMessage);
+            // Send message to API via project PATCH
+            const response = await this.sendToProjectAPI(userMessage);
             
             // Remove typing indicator
             this.removeTypingIndicator(typingId);
             
-            // Add AI response
-            if (response && response.response) {
-                this.addMessage(response.response, 'ai');
-                
-                // Handle any workspace updates
-                if (response.workspace_update) {
-                    this.handleWorkspaceUpdate(response.workspace_update);
+            // Add AI response from the project response
+            if (response && response.messages && response.messages.length > 0) {
+                // Find the assistant message from the response
+                const assistantMessage = response.messages.find(msg => msg.role === 'assistant');
+                if (assistantMessage && assistantMessage.content) {
+                    this.addMessage(assistantMessage.content, 'ai');
+                } else {
+                    this.addMessage("I'm here to help you create amazing web applications. What would you like to build?", 'ai');
                 }
             } else {
                 this.addMessage("I'm here to help you create amazing web applications. What would you like to build?", 'ai');
@@ -103,16 +104,35 @@ class ChatManager {
         }
     }
 
-    // Send message to L8Vibe API
-    async sendToAPI(message) {
-        const response = await fetch('/l8vibe/0/chat', {
-            method: 'POST',
+    // Send message to L8Vibe Project API via PATCH
+    async sendToProjectAPI(message) {
+        if (!this.currentProject) {
+            throw new Error('No current project available');
+        }
+
+        // Create a clone of the project without the messages attribute
+        const projectClone = {
+            name: this.currentProject.name,
+            description: this.currentProject.description,
+            user: this.currentProject.user,
+            apiKey: this.currentProject.apiKey
+            // Intentionally omitting messages attribute
+        };
+
+        // Create user message and add it as a single message to the project clone
+        const userMessage = {
+            role: 'user',
+            content: message
+        };
+        projectClone.messages = [userMessage];
+
+        // Send PATCH request to /l8vibe/0/proj endpoint
+        const response = await fetch('/l8vibe/0/proj', {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                chat: message
-            })
+            body: JSON.stringify(projectClone)
         });
 
         if (!response.ok) {
