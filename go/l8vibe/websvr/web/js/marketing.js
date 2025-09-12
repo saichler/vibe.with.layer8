@@ -426,10 +426,15 @@ class MarketingManager {
     }
 
     // Open Projects menu dropdown
-    openProjectsMenu() {
+    async openProjectsMenu() {
         const projectsMenu = document.querySelector('.projects-menu');
         if (projectsMenu) {
-            // Simply show the dropdown - projects should already be loaded
+            // Load projects if they haven't been loaded yet
+            if (!this.projectsLoaded) {
+                await this.loadUserProjects();
+            }
+            
+            // Show the dropdown
             projectsMenu.classList.add('active');
         }
     }
@@ -528,7 +533,7 @@ class MarketingManager {
         if (projectList && projectList.length > 0) {
             console.log(`Adding ${projectList.length} projects to dropdown`);
             projectList.forEach(project => {
-                html += `<a href="#" class="project-item" data-project-id="${project.id || ''}">${project.name || 'Unnamed Project'}</a>`;
+                html += `<a href="#" class="project-item" data-project-name="${project.name || ''}">${project.name || 'Unnamed Project'}</a>`;
             });
             
             // Add separator
@@ -552,13 +557,13 @@ class MarketingManager {
         console.log('Binding project menu events');
         
         // Handle project item clicks
-        const projectItems = document.querySelectorAll('.project-item[data-project-id]');
+        const projectItems = document.querySelectorAll('.project-item[data-project-name]');
         console.log(`Found ${projectItems.length} project items to bind`);
         projectItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
-                const projectId = item.getAttribute('data-project-id');
-                this.openProject(projectId);
+                const projectName = item.getAttribute('data-project-name');
+                this.openProject(projectName);
                 this.closeProjectsMenu();
             });
         });
@@ -579,11 +584,42 @@ class MarketingManager {
     }
 
     // Open a specific project
-    openProject(projectId) {
-        // Implementation to open the selected project
-        console.log('Opening project:', projectId);
-        // This would typically navigate to the workspace or load the project
-        // For now, just log the action
+    openProject(projectName) {
+        console.log('Opening project:', projectName);
+        
+        // Find the project data by name
+        const project = this.userProjects.find(p => p.name === projectName);
+        if (!project) {
+            console.error('Project not found:', projectName);
+            return;
+        }
+        
+        console.log('Found project data:', project);
+        
+        // Set the project in the workspace
+        if (window.workspace) {
+            workspace.setCurrentProject(project);
+            // Reset preview to empty state for new project session
+            workspace.showEmptyState();
+            console.log('Project set in workspace');
+        }
+        
+        // Initialize chat for this project
+        if (window.chat) {
+            chat.setCurrentProject(project);
+            console.log('Project set in chat');
+        }
+        
+        // Navigate to workspace screen
+        if (window.app) {
+            app.showScreen('workspaceScreen');
+            console.log('Navigated to workspace screen');
+            
+            // Show success message
+            if (window.auth) {
+                auth.showSuccess(`Project "${project.name}" loaded successfully!`);
+            }
+        }
     }
 
     // Enable Projects menu when user signs in

@@ -62,6 +62,11 @@ func TestGenerateProjectsQuery(t *testing.T) {
 	project.Description = "<description>"
 	project.Name = "<name>"
 	project.ApiKey = "<api_key>"
+	project.Messages = make([]*types.Message, 0)
+	project.Messages = append(project.Messages, &types.Message{Role: "user", Content: "Hello World"})
+	project.Messages = append(project.Messages, &types.Message{Role: "assistant", Content: "Have a nice dat"})
+	project.Messages = append(project.Messages, &types.Message{Role: "user", Content: "How are you"})
+	project.Messages = append(project.Messages, &types.Message{Role: "assistant", Content: "I am fine"})
 	jsn, err = protojson.Marshal(project)
 	if err != nil {
 		res.Logger().Fail(t, e.Error())

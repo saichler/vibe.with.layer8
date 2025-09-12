@@ -125,7 +125,11 @@ class WorkspaceManager {
                 throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
             }
 
-            const createdProject = await response.json();
+            const responseData = await response.json();
+            console.log('Project creation response:', responseData);
+
+            // Extract the project from the response - handle both direct and wrapped responses
+            const createdProject = responseData.element || responseData;
             console.log('Project created successfully:', createdProject);
 
             // Store project locally

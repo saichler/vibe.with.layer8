@@ -98,7 +98,7 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 			return object.NewError(vnic.Resources().Logger().Error("Post Error 2:", err.Error()).Error())
 		}
 	}
-	return object.New(nil, &types2.Empty{})
+	return object.New(nil, project)
 }
 
 // Put handles PUT requests
