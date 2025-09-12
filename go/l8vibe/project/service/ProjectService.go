@@ -99,6 +99,9 @@ func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IE
 	if !ok {
 		return object.NewError(vnic.Resources().Logger().Error("Patch Error 1:").Error())
 	}
+	if project.Name == "" || project.User == "" || project.Messages == nil || len(project.Messages) == 0 {
+		return object.NewError("Patch request for project is invalid")
+	}
 	this.appendMessage(project)
 	project.Messages = append(project.Messages, &types.Message{Role: "assistant", Content: "Echo "})
 	this.appendMessage(project)
