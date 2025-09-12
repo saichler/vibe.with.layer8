@@ -2,6 +2,7 @@ package tests
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/saichler/l8services/go/services/manager"
@@ -12,8 +13,11 @@ import (
 	"github.com/saichler/l8utils/go/utils/registry"
 	"github.com/saichler/l8utils/go/utils/resources"
 	"github.com/saichler/reflect/go/reflect/introspecting"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/antropic"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/consts"
 	"github.com/saichler/vibe.with.layer8/go/types"
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 func Resources(alias string, vnetPort uint32) ifs.IResources {
@@ -76,20 +80,25 @@ func TestGenerateProjectsQuery(t *testing.T) {
 
 }
 
-/*
 func testAnthropic(t *testing.T) {
-	client := service.NewAnthropicClient(os.Getenv(consts.ANTHROPIC_ENV))
-	resp, err := client.Do("create a website for hoa management. separate javascript and css to separate files.")
+	client := antropic.NewAnthropicClient()
+	project := &types.Project{}
+	project.User = "saichler@gmail.com"
+	project.Name = "hoa"
+	project.ApiKey = os.Getenv(consts.ANTHROPIC_ENV)
+	project.Description = "HOA sample application"
+	err := client.Do("create a website for hoa management. separate javascript and css to separate files.", project)
 	if err != nil {
 		t.Fail()
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(resp)
+	data, err := proto.Marshal(project)
+	os.WriteFile("project1.data", data, 0777)
 }
 
 func TestAnthropicResponse(t *testing.T) {
-	lines, err := service.ParseAndCreateFiles("respond.json", "./workspace")
+	lines, err := antropic.ParseAndCreateFiles("project1.data")
 	if err != nil {
 		t.Fail()
 		fmt.Println(err)
@@ -100,4 +109,4 @@ func TestAnthropicResponse(t *testing.T) {
 			fmt.Println(line)
 		}
 	}
-}*/
+}

@@ -18,11 +18,10 @@ import (
 )
 
 type AnthropicClient struct {
-	apiKey     string
 	httpClient *http.Client
 }
 
-func NewAnthropicClient(apiKey string) *AnthropicClient {
+func NewAnthropicClient() *AnthropicClient {
 	httpClient := &http.Client{
 		Timeout: time.Second * 300,
 		Transport: &http.Transport{
@@ -33,7 +32,7 @@ func NewAnthropicClient(apiKey string) *AnthropicClient {
 		},
 	}
 	os.Mkdir("responses", 0777)
-	return &AnthropicClient{apiKey: apiKey, httpClient: httpClient}
+	return &AnthropicClient{httpClient: httpClient}
 }
 
 func (this AnthropicClient) Do(text string, project *types.Project) error {
@@ -53,7 +52,7 @@ func (this AnthropicClient) Do(text string, project *types.Project) error {
 	}
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set(consts.ANTHROPIC_HEADER_VERSION, consts.ANTHROPIC_HEADER_VERSION_VALUE)
-	request.Header.Set(consts.ANTHROPIC_HEADER_API_KEY, this.apiKey)
+	request.Header.Set(consts.ANTHROPIC_HEADER_API_KEY, project.ApiKey)
 
 	response, err := this.httpClient.Do(request)
 	if err != nil {

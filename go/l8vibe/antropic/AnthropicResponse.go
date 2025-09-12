@@ -1,7 +1,6 @@
 package antropic
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,23 +8,24 @@ import (
 	"strings"
 
 	"github.com/saichler/vibe.with.layer8/go/types"
+	"google.golang.org/protobuf/proto"
 )
 
-func ParseAndCreateFiles(resposeFilename, path string) ([]string, error) {
+func ParseAndCreateFiles(resposeFilename string) ([]string, error) {
 	data, err := os.ReadFile(resposeFilename)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := &types.ClaudeResponse{}
-	err = json.Unmarshal(data, resp)
+	project := &types.Project{}
+	err = proto.Unmarshal(data, project)
 	if err != nil {
 		return nil, err
 	}
 
 	var result []string
-	content := resp.Content[len(resp.Content)-1]
-	lines, e := parseAndCreateFiles(content.Text, path)
+	content := project.Messages[len(project.Messages)-1].Content
+	lines, e := parseAndCreateFiles(content, project)
 	if e != nil {
 		fmt.Println(e)
 		return result, e
@@ -36,7 +36,7 @@ func ParseAndCreateFiles(resposeFilename, path string) ([]string, error) {
 	return result, nil
 }
 
-func parseAndCreateFiles(text, path string) ([]string, error) {
+func parseAndCreateFiles(text string, project *types.Project) ([]string, error) {
 	var result []string
 
 	// Regular expression to match code blocks with file names
@@ -54,12 +54,15 @@ func parseAndCreateFiles(text, path string) ([]string, error) {
 		// Filter matches that look like file names (have extensions)
 		for _, match := range altMatches {
 			filename := strings.TrimSpace(match[1])
+			// Clean filename by removing markdown formatting (asterisks, etc.)
+			filename = strings.Trim(filename, "*")
 			if strings.Contains(filename, ".") && !strings.Contains(filename, " ") {
 				content := match[3]
-				if err := createFileWithPath(filename, content, path); err != nil {
+				if err := createFileWithPath(filename, content, project); err != nil {
 					return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 				}
-				result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(path, filename)))
+				basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
+				result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, filename)))
 			}
 		}
 	} else {
@@ -68,10 +71,11 @@ func parseAndCreateFiles(text, path string) ([]string, error) {
 			filename := match[1]
 			content := match[3]
 
-			if err := createFileWithPath(filename, content, path); err != nil {
+			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 			}
-			result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(path, filename)))
+			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
+			result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, filename)))
 		}
 	}
 
@@ -92,12 +96,15 @@ func parseAndCreateFiles(text, path string) ([]string, error) {
 				len(strings.Split(trimmedLine, ".")) == 2 {
 				// Save previous file if exists
 				if currentFile != "" && content.Len() > 0 {
-					if err := createFileWithPath(currentFile, content.String(), path); err != nil {
+					if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 					}
-					result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(path, currentFile)))
+					basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
+					result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, currentFile)))
 				}
-				currentFile = trimmedLine
+				// Clean filename by removing markdown formatting (asterisks, etc.)
+				cleanedFilename := strings.Trim(trimmedLine, "*")
+				currentFile = cleanedFilename
 				content.Reset()
 				continue
 			}
@@ -116,18 +123,20 @@ func parseAndCreateFiles(text, path string) ([]string, error) {
 
 		// Save the last file
 		if currentFile != "" && content.Len() > 0 {
-			if err := createFileWithPath(currentFile, content.String(), path); err != nil {
+			if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 			}
-			result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(path, currentFile)))
+			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
+			result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, currentFile)))
 		}
 	}
 
 	return result, nil
 }
 
-func createFileWithPath(filename, content, basePath string) error {
-	// Combine the base path with the filename
+func createFileWithPath(filename, content string, project *types.Project) error {
+	// Construct the path: ./web/workspace/{user}/{project_name}/{filename}
+	basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 	fullPath := filepath.Join(basePath, filename)
 
 	// Create directory if it doesn't exist

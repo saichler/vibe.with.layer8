@@ -45,8 +45,8 @@ func (this *ProjectService) load(resources ifs.IResources) {
 	for _, user := range users {
 		projects, err := os.ReadDir("/data/" + user.Name())
 		if err != nil {
-			resources.Logger().Error("Failed to load projects")
-			return
+			resources.Logger().Error("Failed to load projects for " + user.Name())
+			continue
 		}
 		for _, project := range projects {
 			if strings2.Contains(project.Name(), ".dat") {
