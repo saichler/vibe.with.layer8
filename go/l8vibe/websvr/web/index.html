@@ -605,7 +605,17 @@
                 <header class="workspace-header">
                     <div class="header-content">
                         <div class="project-info">
-                            <h1 id="currentProjectName" class="project-name">Project Name</h1>
+                            <div class="project-selector">
+                                <button id="workspaceProjectsBtn" class="project-selector-btn">
+                                    <h1 id="currentProjectName" class="project-name">Project Name</h1>
+                                    <svg class="dropdown-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"></polyline>
+                                    </svg>
+                                </button>
+                                <div id="workspaceProjectsDropdown" class="workspace-projects-dropdown">
+                                    <div class="projects-loading">Loading projects...</div>
+                                </div>
+                            </div>
                             <span class="project-status">Active Session</span>
                         </div>
                         <div class="header-actions">

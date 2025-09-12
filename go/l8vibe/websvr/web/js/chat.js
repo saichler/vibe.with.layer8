@@ -325,16 +325,18 @@ class ChatManager {
 
     // Save chat history to storage
     saveChatHistory() {
-        if (this.currentProject) {
-            const storageKey = `l8vibe_chat_${this.currentProject.id}`;
+        if (this.currentProject && this.currentProject.user && this.currentProject.name) {
+            const storageKey = `l8vibe_chat_${this.currentProject.user}_${this.currentProject.name}`;
             localStorage.setItem(storageKey, JSON.stringify(this.chatHistory));
+        } else {
+            console.warn('Cannot save chat history: currentProject missing user or name', this.currentProject);
         }
     }
 
     // Load chat history from storage
     loadChatHistory() {
-        if (this.currentProject) {
-            const storageKey = `l8vibe_chat_${this.currentProject.id}`;
+        if (this.currentProject && this.currentProject.user && this.currentProject.name) {
+            const storageKey = `l8vibe_chat_${this.currentProject.user}_${this.currentProject.name}`;
             const stored = localStorage.getItem(storageKey);
             
             if (stored) {
@@ -346,6 +348,8 @@ class ChatManager {
                     this.chatHistory = [];
                 }
             }
+        } else {
+            console.warn('Cannot load chat history: currentProject missing user or name', this.currentProject);
         }
     }
 
@@ -399,9 +403,22 @@ class ChatManager {
     setCurrentProject(project) {
         this.currentProject = project;
         
-        // Check if project has messages to load into chat session
+        // Check if project has meaningful messages to load into chat session
         if (project && project.messages && project.messages.length > 0) {
-            this.loadProjectMessages(project.messages);
+            // Check if messages are meaningful (not just placeholder/empty messages)
+            const meaningfulMessages = project.messages.filter(msg => 
+                msg.content && 
+                msg.content.trim() && 
+                msg.content.trim().toLowerCase() !== 'echo' &&
+                msg.content.trim().length > 5 // Filter out very short placeholder messages
+            );
+            
+            if (meaningfulMessages.length > 0) {
+                this.loadProjectMessages(project.messages);
+            } else {
+                // No meaningful messages, show welcome message instead
+                this.loadChatHistory();
+            }
         } else {
             this.loadChatHistory();
         }
@@ -420,8 +437,8 @@ class ChatManager {
             }
         }
         
-        if (this.currentProject) {
-            const storageKey = `l8vibe_chat_${this.currentProject.id}`;
+        if (this.currentProject && this.currentProject.user && this.currentProject.name) {
+            const storageKey = `l8vibe_chat_${this.currentProject.user}_${this.currentProject.name}`;
             localStorage.removeItem(storageKey);
         }
     }

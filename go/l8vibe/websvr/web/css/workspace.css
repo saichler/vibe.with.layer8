@@ -76,6 +76,102 @@ html, body {
   margin-top: 2px;
 }
 
+/* Project Selector Dropdown */
+.project-selector {
+  position: relative;
+}
+
+.project-selector-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  transition: opacity 0.2s ease;
+}
+
+.project-selector-btn:hover {
+  opacity: 0.8;
+}
+
+.project-selector-btn .project-name {
+  pointer-events: none;
+}
+
+.dropdown-icon {
+  color: var(--stone-dark);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.project-selector-btn.active .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.workspace-projects-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--paper-white);
+  border: 1px solid var(--stone-medium);
+  border-radius: var(--border-radius-organic);
+  box-shadow: var(--shadow-medium);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+  margin-top: var(--space-xs);
+}
+
+.workspace-projects-dropdown.active {
+  display: block;
+}
+
+.projects-loading {
+  padding: var(--space-m);
+  text-align: center;
+  color: var(--stone-dark);
+  font-size: var(--font-size-sm);
+}
+
+.workspace-project-item {
+  padding: var(--space-s) var(--space-m);
+  cursor: pointer;
+  border-bottom: 1px solid var(--stone-light);
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace-project-item:hover {
+  background-color: var(--stone-light);
+}
+
+.workspace-project-item:last-child {
+  border-bottom: none;
+}
+
+.workspace-project-item.current {
+  background-color: var(--clay-warm);
+  color: var(--charcoal);
+  font-weight: 500;
+}
+
+.workspace-project-name {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--charcoal);
+}
+
+.workspace-project-desc {
+  font-size: var(--font-size-sm);
+  color: var(--stone-dark);
+  margin-top: 2px;
+}
+
 .header-actions {
   display: flex;
   gap: var(--space-m);
@@ -105,6 +201,9 @@ html, body {
   display: flex;
   flex-direction: column;
   position: relative;
+  height: calc(100vh - 80px);
+  max-height: calc(100vh - 80px);
+  overflow: hidden;
 }
 
 .chat-header {
@@ -229,6 +328,9 @@ html, body {
   position: relative;
   width: 100% !important;
   max-width: none !important;
+  height: calc(100vh - 80px);
+  max-height: calc(100vh - 80px);
+  overflow: hidden;
 }
 
 .preview-header {

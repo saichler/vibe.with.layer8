@@ -40,6 +40,26 @@ class WorkspaceManager {
             });
         }
 
+        // Project selector dropdown
+        const workspaceProjectsBtn = document.getElementById('workspaceProjectsBtn');
+        const workspaceProjectsDropdown = document.getElementById('workspaceProjectsDropdown');
+        
+        if (workspaceProjectsBtn) {
+            workspaceProjectsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleProjectDropdown();
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (workspaceProjectsDropdown && 
+                !workspaceProjectsBtn?.contains(e.target) && 
+                !workspaceProjectsDropdown.contains(e.target)) {
+                this.closeProjectDropdown();
+            }
+        });
+
         // Preview controls
         const previewControls = document.querySelectorAll('.control-btn[data-view]');
         previewControls.forEach(btn => {
@@ -129,7 +149,8 @@ class WorkspaceManager {
             console.log('Project creation response:', responseData);
 
             // Extract the project from the response - handle both direct and wrapped responses
-            const createdProject = responseData.element || responseData;
+            const createdProject = responseData.element || 
+                                 (responseData.list && responseData.list.length > 0 ? responseData.list[0] : responseData);
             console.log('Project created successfully:', createdProject);
 
             // Store project locally
@@ -186,20 +207,24 @@ class WorkspaceManager {
         this.currentProject = null;
         this.clearStoredProject();
         
-        // Clear forms
-        const nameInput = document.getElementById('projectName');
-        const descInput = document.getElementById('projectDescription');
+        // Clear modal forms
+        const modalNameInput = document.getElementById('modalProjectName');
+        const modalDescInput = document.getElementById('modalProjectDescription');
+        const modalApiKeyInput = document.getElementById('modalClaudeApiKey');
         
-        if (nameInput) nameInput.value = '';
-        if (descInput) descInput.value = '';
+        if (modalNameInput) modalNameInput.value = '';
+        if (modalDescInput) modalDescInput.value = '';
+        if (modalApiKeyInput) modalApiKeyInput.value = '';
 
         // Clear chat
         if (window.chat) {
             chat.clearChat();
         }
 
-        // Navigate to project creation screen
-        app.showScreen('projectScreen');
+        // Show the create project modal instead of navigating to old screen
+        if (window.marketing) {
+            marketing.showCreateProjectModal();
+        }
     }
 
     // Generate unique project ID
@@ -428,5 +453,166 @@ class WorkspaceManager {
             chat_messages: chat?.chatHistory?.length || 0,
             has_preview: this.hasActivePreview
         };
+    }
+
+    // Toggle project dropdown
+    toggleProjectDropdown() {
+        const dropdown = document.getElementById('workspaceProjectsDropdown');
+        const button = document.getElementById('workspaceProjectsBtn');
+        
+        if (!dropdown || !button) return;
+        
+        if (dropdown.classList.contains('active')) {
+            this.closeProjectDropdown();
+        } else {
+            this.openProjectDropdown();
+        }
+    }
+
+    // Open project dropdown and load projects
+    async openProjectDropdown() {
+        const dropdown = document.getElementById('workspaceProjectsDropdown');
+        const button = document.getElementById('workspaceProjectsBtn');
+        
+        if (!dropdown || !button) return;
+        
+        dropdown.classList.add('active');
+        button.classList.add('active');
+        
+        // Load projects
+        await this.loadWorkspaceProjects();
+    }
+
+    // Close project dropdown
+    closeProjectDropdown() {
+        const dropdown = document.getElementById('workspaceProjectsDropdown');
+        const button = document.getElementById('workspaceProjectsBtn');
+        
+        if (dropdown) dropdown.classList.remove('active');
+        if (button) button.classList.remove('active');
+    }
+
+    // Load projects for workspace dropdown
+    async loadWorkspaceProjects() {
+        const dropdown = document.getElementById('workspaceProjectsDropdown');
+        if (!dropdown) return;
+
+        try {
+            const currentUser = window.auth.getCurrentUser();
+            if (!currentUser) {
+                dropdown.innerHTML = '<div class="projects-loading">Please sign in to view projects</div>';
+                return;
+            }
+
+            // Show loading state
+            dropdown.innerHTML = '<div class="projects-loading">Loading projects...</div>';
+
+            // Use the same API call as marketing.js
+            const requestBody = {
+                text: `select * from project where user=${currentUser.email}`,
+                rootType: "project",
+                properties: ["*"],
+                criteria: {
+                    condition: {
+                        comparator: {
+                            left: "user",
+                            oper: "=",
+                            right: currentUser.email
+                        }
+                    }
+                },
+                matchCase: true
+            };
+
+            const url = new URL('/l8vibe/0/proj', window.location.origin);
+            url.searchParams.append('body', JSON.stringify(requestBody));
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const projects = data.list || [];
+
+            this.populateWorkspaceProjects(projects);
+
+        } catch (error) {
+            console.error('Error loading workspace projects:', error);
+            dropdown.innerHTML = '<div class="projects-loading">Error loading projects</div>';
+        }
+    }
+
+    // Populate workspace projects dropdown
+    populateWorkspaceProjects(projects) {
+        const dropdown = document.getElementById('workspaceProjectsDropdown');
+        if (!dropdown) return;
+
+        if (projects.length === 0) {
+            dropdown.innerHTML = '<div class="projects-loading">No projects found</div>';
+            return;
+        }
+
+        let html = '';
+        projects.forEach(project => {
+            const isCurrentProject = this.currentProject && 
+                this.currentProject.name === project.name && 
+                this.currentProject.user === project.user;
+            
+            html += `
+                <div class="workspace-project-item ${isCurrentProject ? 'current' : ''}" 
+                     data-project-name="${project.name}" 
+                     data-project-user="${project.user}">
+                    <div class="workspace-project-name">${project.name}</div>
+                    ${project.description ? `<div class="workspace-project-desc">${project.description}</div>` : ''}
+                </div>
+            `;
+        });
+
+        dropdown.innerHTML = html;
+
+        // Add click handlers for project items
+        const projectItems = dropdown.querySelectorAll('.workspace-project-item');
+        projectItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const projectName = item.getAttribute('data-project-name');
+                const projectUser = item.getAttribute('data-project-user');
+                this.switchToProject(projectName, projectUser, projects);
+            });
+        });
+    }
+
+    // Switch to a different project
+    async switchToProject(projectName, projectUser, allProjects) {
+        try {
+            // Find the project data
+            const project = allProjects.find(p => p.name === projectName && p.user === projectUser);
+            if (!project) {
+                console.error('Project not found:', projectName, projectUser);
+                return;
+            }
+
+            // Close dropdown
+            this.closeProjectDropdown();
+
+            // Switch to the project
+            this.setCurrentProject(project);
+            
+            // Initialize chat for this project
+            if (window.chat) {
+                chat.setCurrentProject(project);
+            }
+
+            console.log('Switched to project:', project.name);
+            
+        } catch (error) {
+            console.error('Error switching to project:', error);
+        }
     }
 }
