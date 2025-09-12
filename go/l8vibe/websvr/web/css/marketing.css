@@ -1129,3 +1129,130 @@
     width: 100% !important;
   }
 }
+
+/* Disclaimer Modal Styles */
+.disclaimer-content {
+  text-align: left;
+}
+
+.disclaimer-subtitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: var(--space-m);
+}
+
+.disclaimer-intro {
+  margin-bottom: var(--space-xl);
+}
+
+.disclaimer-intro p {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--stone-dark);
+  margin-bottom: var(--space-m);
+}
+
+.disclaimer-list {
+  margin-bottom: var(--space-xl);
+}
+
+.disclaimer-item {
+  margin-bottom: var(--space-m);
+  padding: var(--space-s) var(--space-m);
+  background: var(--stone-light);
+  border-radius: var(--border-radius-organic);
+  border-left: 3px solid var(--clay-warm);
+  line-height: 1.5;
+  color: var(--charcoal);
+}
+
+/* Different fonts for each bullet point */
+.disclaimer-item.font-1 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+}
+
+.disclaimer-item.font-2 {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+}
+
+.disclaimer-item.font-3 {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.disclaimer-item.font-4 {
+  font-family: 'Arial', sans-serif;
+  font-variant: small-caps;
+}
+
+.disclaimer-item.font-5 {
+  font-family: 'Times New Roman', serif;
+  font-size: 1.1em;
+}
+
+.disclaimer-item.font-6 {
+  font-family: 'Verdana', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.disclaimer-item.font-7 {
+  font-family: 'Helvetica', sans-serif;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.disclaimer-item.font-8 {
+  font-family: 'Trebuchet MS', sans-serif;
+  font-style: oblique;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.disclaimer-footer {
+  text-align: center;
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--stone-medium);
+}
+
+.disclaimer-footer p {
+  font-size: var(--font-size-sm);
+  color: var(--stone-dark);
+  font-style: italic;
+}
+
+/* Large Modal for Disclaimer - Override all existing modal styles */
+#disclaimerModal.modal.large-modal {
+  padding: 20px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#disclaimerModal.modal.large-modal.active {
+  display: flex !important;
+}
+
+#disclaimerModal .large-modal-content {
+  background: var(--paper-white) !important;
+  border-radius: var(--border-radius-organic) !important;
+  box-shadow: var(--shadow-strong) !important;
+  width: 95vw !important;
+  height: 90vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 95vw !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+}
+
+#disclaimerModal .modal-body {
+  flex: 1 !important;
+  padding: var(--space-l) var(--space-xl) var(--space-xl) var(--space-xl) !important;
+  overflow-y: auto !important;
+  min-height: 0 !important;
+  width: 100% !important;
+}

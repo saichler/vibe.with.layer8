@@ -25,6 +25,15 @@ class MarketingManager {
             });
         }
 
+        // Disclaimer CTA button
+        const disclaimerCTA = document.getElementById('disclaimerCTA');
+        if (disclaimerCTA) {
+            disclaimerCTA.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showDisclaimerModal();
+            });
+        }
+
         // Projects Menu button
         const projectsMenuBtn = document.getElementById('projectsMenuBtn');
         if (projectsMenuBtn) {
@@ -102,6 +111,24 @@ class MarketingManager {
             });
         }
 
+        // Disclaimer modal handlers
+        const disclaimerModal = document.getElementById('disclaimerModal');
+        const closeDisclaimer = document.getElementById('closeDisclaimer');
+
+        if (closeDisclaimer) {
+            closeDisclaimer.addEventListener('click', () => {
+                this.hideDisclaimerModal();
+            });
+        }
+
+        if (disclaimerModal) {
+            disclaimerModal.addEventListener('click', (e) => {
+                if (e.target === disclaimerModal) {
+                    this.hideDisclaimerModal();
+                }
+            });
+        }
+
         // Create Project modal handlers
         const createProjectModal = document.getElementById('createProjectModal');
         const closeCreateProject = document.getElementById('closeCreateProject');
@@ -173,6 +200,34 @@ class MarketingManager {
             // Fade out animation
             setTimeout(() => {
                 aboutModal.style.display = 'none';
+            }, 300);
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Show disclaimer modal
+    showDisclaimerModal() {
+        const disclaimerModal = document.getElementById('disclaimerModal');
+        if (disclaimerModal) {
+            disclaimerModal.classList.add('active');
+            disclaimerModal.style.display = 'flex';
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // Hide disclaimer modal
+    hideDisclaimerModal() {
+        const disclaimerModal = document.getElementById('disclaimerModal');
+        if (disclaimerModal) {
+            disclaimerModal.classList.remove('active');
+            
+            // Fade out animation
+            setTimeout(() => {
+                disclaimerModal.style.display = 'none';
             }, 300);
             
             // Restore body scroll
