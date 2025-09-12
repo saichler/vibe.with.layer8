@@ -33,3 +33,11 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate

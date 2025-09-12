@@ -45,7 +45,9 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 	if ok {
 		key := strings.New(project.User, project.Name).String()
 		this.cache.Post(key, project, elements.Notification())
-		projectFileName := strings.New("/data/", project.User, "/", project.Name, ".dat").String()
+		projectPath := strings.New("/data/", project.User, "/").String()
+		os.MkdirAll(projectPath, os.ModePerm)
+		projectFileName := strings.New(projectPath, project.Name, ".dat").String()
 		data, err := proto.Marshal(project)
 		if err != nil {
 			return object.NewError(vnic.Resources().Logger().Error("Post Error 1:", err.Error()).Error())
