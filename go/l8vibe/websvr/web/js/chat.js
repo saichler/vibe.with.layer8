@@ -321,10 +321,44 @@ class ChatManager {
         });
     }
 
+    // Load messages from project into chat session
+    loadProjectMessages(messages) {
+        // Clear existing chat
+        this.chatHistory = [];
+        const messagesContainer = document.getElementById('chatMessages');
+        if (messagesContainer) {
+            messagesContainer.innerHTML = '';
+        }
+        
+        // Process each message according to the specified logic
+        messages.forEach(message => {
+            if (message.role === 'user') {
+                // Add user message content directly to chat
+                this.addMessage(message.content, 'user');
+            } else if (message.role === 'assistant') {
+                // For assistant messages, get the last line and add "...Done!"
+                const content = message.content || '';
+                const lines = content.split('\n').filter(line => line.trim());
+                const lastLine = lines.length > 0 ? lines[lines.length - 1] : content;
+                const formattedContent = lastLine + '...Done!';
+                this.addMessage(formattedContent, 'ai');
+            }
+        });
+        
+        // Save the loaded messages as chat history
+        this.saveChatHistory();
+    }
+
     // Set current project
     setCurrentProject(project) {
         this.currentProject = project;
-        this.loadChatHistory();
+        
+        // Check if project has messages to load into chat session
+        if (project && project.messages && project.messages.length > 0) {
+            this.loadProjectMessages(project.messages);
+        } else {
+            this.loadChatHistory();
+        }
     }
 
     // Clear chat history
