@@ -97,10 +97,10 @@ func (this *ProjectService) DeActivate() error {
 
 // Post handles POST requests
 func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
-	vnic.Resources().Logger().Error("Post")
+	fmt.Println("Post")
 	project, ok := elements.Element().(*types.Project)
 	if ok {
-		vnic.Resources().Logger().Error("Post Exist")
+		fmt.Println("Post OK")
 		this.cache.Post(project, elements.Notification())
 		antropic.ParseMessages(project)
 		saveProject(project)
@@ -115,10 +115,10 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 
 // Put handles PUT requests
 func (this *ProjectService) Put(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
-	vnic.Resources().Logger().Error("Put")
+	fmt.Println("Put")
 	project, ok := elements.Element().(*types.Project)
 	if ok {
-		vnic.Resources().Logger().Error("Put Exist")
+		fmt.Println("Put OK")
 		this.cache.Put(project, elements.Notification())
 		antropic.ParseMessages(project)
 		saveProject(project)
@@ -133,6 +133,8 @@ func (this *ProjectService) Put(elements ifs.IElements, vnic ifs.IVNic) ifs.IEle
 
 // Patch handles PATCH requests
 func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
+	fmt.Println("Patch ", elements.Notification())
+
 	project, ok := elements.Element().(*types.Project)
 	if !ok {
 		return object.NewError(vnic.Resources().Logger().Error("Patch Error 1:").Error())
@@ -143,6 +145,7 @@ func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IE
 	current, _ := this.cache.Get(project)
 	currentProj := current.(*types.Project)
 	err := this.simulator.Do(project.Messages[0].Content, currentProj)
+	fmt.Println("Err=", err)
 	if err == nil {
 		antropic.ParseMessages(currentProj)
 		this.cache.Put(currentProj, elements.Notification())
