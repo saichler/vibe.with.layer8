@@ -37,8 +37,9 @@ func ParseAndCreateFiles(resposeFilename string) ([]string, error) {
 }
 
 func ParseMessages(project *types.Project) error {
-	for _, message := range project.Messages {
+	for i, message := range project.Messages {
 		if message.Role == "assistant" {
+			fmt.Println("Parsing message #", i)
 			_, err := ParseMessage(message.Content, project)
 			if err != nil {
 				return err
@@ -61,7 +62,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 		// Try alternative pattern that matches **filename** or Updated filename formats
 		altPattern := regexp.MustCompile(`(?s)\*\*(Updated\s+)?([\w\-./]+\.\w+)\*\*.*?\n` + "```" + `(\w+)?\s*\n(.*?)\n` + "```")
 		altMatches := altPattern.FindAllStringSubmatch(text, -1)
-		
+
 		// Process matches with the **Updated filename** pattern
 		for _, match := range altMatches {
 			filename := strings.TrimSpace(match[2])
@@ -72,7 +73,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 			result = append(result, fmt.Sprintf("Updated file: %s", filepath.Join(basePath, filename)))
 		}
-		
+
 		if len(altMatches) == 0 {
 			// Try third pattern that matches the actual format in the sample
 			// Matches file structure comments followed by code blocks
@@ -207,27 +208,27 @@ func isPartialUpdate(newContent, existingContent, filename string) bool {
 	// Check if it's a JavaScript file with method updates
 	if strings.HasSuffix(filename, ".js") {
 		// Look for method/function updates
-		if strings.Contains(newContent, "loadSampleData()") && 
-		   strings.Contains(newContent, "only showing the modified") {
+		if strings.Contains(newContent, "loadSampleData()") &&
+			strings.Contains(newContent, "only showing the modified") {
 			return true
 		}
 		// Look for partial function definitions
-		if strings.Contains(newContent, "function ") || 
-		   strings.Contains(newContent, "() {") {
+		if strings.Contains(newContent, "function ") ||
+			strings.Contains(newContent, "() {") {
 			// Count lines - if significantly smaller than existing, likely partial
 			newLines := len(strings.Split(newContent, "\n"))
 			existingLines := len(strings.Split(existingContent, "\n"))
 			return newLines < existingLines/2
 		}
 	}
-	
+
 	// Check for other file types with similar patterns
-	if strings.Contains(newContent, "Updated") || 
-	   strings.Contains(newContent, "only showing") ||
-	   strings.Contains(newContent, "modified") {
+	if strings.Contains(newContent, "Updated") ||
+		strings.Contains(newContent, "only showing") ||
+		strings.Contains(newContent, "modified") {
 		return true
 	}
-	
+
 	return false
 }
 
@@ -235,7 +236,7 @@ func applyPartialUpdate(existingContent, newContent, filename string) string {
 	if strings.HasSuffix(filename, ".js") {
 		return applyJavaScriptUpdate(existingContent, newContent)
 	}
-	
+
 	// For other file types, default to simple replacement
 	return newContent
 }
@@ -247,21 +248,21 @@ func applyJavaScriptUpdate(existingContent, newContent string) string {
 	var methodName string
 	var inMethod bool
 	var braceCount int
-	
+
 	// Find the method being updated
 	for i, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		
+
 		// Look for method definition
-		if strings.Contains(trimmed, "() {") || 
-		   (strings.Contains(trimmed, "function ") && strings.Contains(trimmed, "{")) {
+		if strings.Contains(trimmed, "() {") ||
+			(strings.Contains(trimmed, "function ") && strings.Contains(trimmed, "{")) {
 			methodStart = i
 			methodName = extractMethodName(trimmed)
 			inMethod = true
 			braceCount = strings.Count(trimmed, "{") - strings.Count(trimmed, "}")
 			continue
 		}
-		
+
 		if inMethod {
 			braceCount += strings.Count(trimmed, "{") - strings.Count(trimmed, "}")
 			if braceCount == 0 {
@@ -270,15 +271,15 @@ func applyJavaScriptUpdate(existingContent, newContent string) string {
 			}
 		}
 	}
-	
+
 	if methodName == "" {
 		return newContent // Fallback to complete replacement
 	}
-	
+
 	// Extract the new method content
-	newMethodLines := lines[methodStart:methodEnd+1]
+	newMethodLines := lines[methodStart : methodEnd+1]
 	newMethodContent := strings.Join(newMethodLines, "\n")
-	
+
 	// Replace the method in existing content
 	return replaceMethodInContent(existingContent, methodName, newMethodContent)
 }
@@ -305,15 +306,15 @@ func replaceMethodInContent(content, methodName, newMethodContent string) string
 	var result []string
 	var inTargetMethod bool
 	var braceCount int
-	
+
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		
+
 		// Check if this is the start of our target method
 		if !inTargetMethod && strings.Contains(line, methodName+"()") && strings.Contains(line, "{") {
 			inTargetMethod = true
 			braceCount = strings.Count(trimmed, "{") - strings.Count(trimmed, "}")
-			
+
 			// If the opening brace is on the same line and closes immediately, handle single-line method
 			if braceCount == 0 {
 				inTargetMethod = false
@@ -324,7 +325,7 @@ func replaceMethodInContent(content, methodName, newMethodContent string) string
 			}
 			continue
 		}
-		
+
 		if inTargetMethod {
 			braceCount += strings.Count(trimmed, "{") - strings.Count(trimmed, "}")
 			if braceCount == 0 {
@@ -336,12 +337,12 @@ func replaceMethodInContent(content, methodName, newMethodContent string) string
 			// Skip old method content lines
 			continue
 		}
-		
+
 		// Add non-target method lines
 		if !inTargetMethod {
 			result = append(result, line)
 		}
 	}
-	
+
 	return strings.Join(result, "\n")
 }

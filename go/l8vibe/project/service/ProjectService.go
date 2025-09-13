@@ -100,7 +100,11 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 	fmt.Println("Post")
 	project, ok := elements.Element().(*types.Project)
 	if ok {
-		fmt.Println("Post OK")
+		numMsg := 0
+		if project.Messages != nil {
+			numMsg = len(project.Messages)
+		}
+		fmt.Println("Post OK ", numMsg)
 		this.cache.Post(project, elements.Notification())
 		antropic.ParseMessages(project)
 		saveProject(project)
@@ -118,7 +122,11 @@ func (this *ProjectService) Put(elements ifs.IElements, vnic ifs.IVNic) ifs.IEle
 	fmt.Println("Put")
 	project, ok := elements.Element().(*types.Project)
 	if ok {
-		fmt.Println("Put OK")
+		numMsg := 0
+		if project.Messages != nil {
+			numMsg = len(project.Messages)
+		}
+		fmt.Println("Put OK ", numMsg)
 		this.cache.Put(project, elements.Notification())
 		antropic.ParseMessages(project)
 		saveProject(project)
@@ -145,9 +153,13 @@ func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IE
 	current, _ := this.cache.Get(project)
 	currentProj := current.(*types.Project)
 	err := this.simulator.Do(project.Messages[0].Content, currentProj)
-	fmt.Println("Err=", err)
 	if err == nil {
+		numMsg := 0
+		if project.Messages != nil {
+			numMsg = len(currentProj.Messages)
+		}
 		antropic.ParseMessages(currentProj)
+		fmt.Println("Patch put in cache ", numMsg)
 		this.cache.Put(currentProj, elements.Notification())
 		saveProject(currentProj)
 		common.WebServer.LoadWebUI()
