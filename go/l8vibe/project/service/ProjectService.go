@@ -97,8 +97,10 @@ func (this *ProjectService) DeActivate() error {
 
 // Post handles POST requests
 func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
+	vnic.Resources().Logger().Error("Post")
 	project, ok := elements.Element().(*types.Project)
 	if ok {
+		vnic.Resources().Logger().Error("Post Exist")
 		this.cache.Post(project, elements.Notification())
 		antropic.ParseMessages(project)
 		saveProject(project)
@@ -113,8 +115,10 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 
 // Put handles PUT requests
 func (this *ProjectService) Put(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
+	vnic.Resources().Logger().Error("Put")
 	project, ok := elements.Element().(*types.Project)
 	if ok {
+		vnic.Resources().Logger().Error("Put Exist")
 		this.cache.Put(project, elements.Notification())
 		antropic.ParseMessages(project)
 		saveProject(project)
