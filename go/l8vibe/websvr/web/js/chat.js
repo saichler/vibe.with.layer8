@@ -386,8 +386,11 @@ class ChatManager {
                 // Add user message content directly to chat
                 this.addMessage(message.content, 'user');
             } else if (message.role === 'assistant') {
-                // Add assistant message content directly to chat
-                this.addMessage(message.content, 'ai');
+                // For assistant messages, show only the last line
+                const content = message.content || '';
+                const lines = content.split('\n').filter(line => line.trim());
+                const lastLine = lines.length > 0 ? lines[lines.length - 1] : content;
+                this.addMessage(lastLine, 'ai');
             }
         });
         
