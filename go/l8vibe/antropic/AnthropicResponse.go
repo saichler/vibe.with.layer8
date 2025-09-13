@@ -25,7 +25,7 @@ func ParseAndCreateFiles(resposeFilename string) ([]string, error) {
 
 	var result []string
 	content := project.Messages[len(project.Messages)-1].Content
-	lines, e := parseAndCreateFiles(content, project)
+	lines, e := ParseMessage(content, project)
 	if e != nil {
 		fmt.Println(e)
 		return result, e
@@ -36,7 +36,15 @@ func ParseAndCreateFiles(resposeFilename string) ([]string, error) {
 	return result, nil
 }
 
-func parseAndCreateFiles(text string, project *types.Project) ([]string, error) {
+func ParseMessages(project *types.Project) {
+	for _, message := range project.Messages {
+		if message.Role == "assistant" {
+			ParseMessage(message.Content, project)
+		}
+	}
+}
+
+func ParseMessage(text string, project *types.Project) ([]string, error) {
 	var result []string
 
 	// Regular expression to match code blocks with file names
