@@ -11,6 +11,7 @@ import (
 	"github.com/saichler/layer8/go/overlay/vnic"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/common"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/consts"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/project/service"
 	types2 "github.com/saichler/vibe.with.layer8/go/types"
 )
 
@@ -51,6 +52,10 @@ func startWebServer(resources ifs.IResources) {
 	nic.Resources().Services().RegisterServiceHandlerType(&server.WebService{})
 	_, err = nic.Resources().Services().Activate(server.ServiceTypeName, ifs.WebService,
 		0, nic.Resources(), nic, svr)
+
+	nic.Resources().Registry().Register(&service.ProjectService{})
+	nic.Resources().Services().Activate(service.ServiceType, service.ServiceName, service.ServiceArea,
+		resources, nic)
 
 	nic.Resources().Logger().Info("Web Server Started!")
 	resources.Logger().SetLogLevel(ifs.Error_Level)

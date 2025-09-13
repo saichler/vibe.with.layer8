@@ -45,8 +45,6 @@ html, body {
   max-width: none !important;
   margin: 0 !important;
   box-sizing: border-box !important;
-  /* Temporary debugging border - remove after testing */
-  border-top: 5px solid blue !important;
 }
 
 .header-content {

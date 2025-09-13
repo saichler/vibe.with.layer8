@@ -20,7 +20,8 @@ func main() {
 	nic.WaitForConnection()
 
 	nic.Resources().Registry().Register(&service.ProjectService{})
-	nic.Resources().Services().Activate(service.ServiceType, service.ServiceName, service.ServiceArea, resources, nic)
+	nic.Resources().Services().Activate(service.ServiceType, service.ServiceName, service.ServiceArea,
+		resources, nic)
 
 	resources.Logger().Info("Project started!")
 	resources.Logger().SetLogLevel(ifs.Error_Level)
