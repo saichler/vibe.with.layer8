@@ -160,7 +160,15 @@ func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IE
 		}
 		antropic.ParseMessages(currentProj)
 		fmt.Println("Patch put in cache ", numMsg)
-		this.cache.Put(currentProj, elements.Notification())
+		notif, er := this.cache.Put(currentProj, elements.Notification())
+		if er != nil {
+			panic(er.Error())
+		}
+		if notif == nil {
+			fmt.Println("No Notification found in cache")
+		} else {
+			fmt.Println("Notification of ", notif.Type.String())
+		}
 		saveProject(currentProj)
 		common.WebServer.LoadWebUI()
 		project.Messages = make([]*types.Message, 2)
