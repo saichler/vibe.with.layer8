@@ -1,0 +1,2116 @@
+I'll create a comprehensive HOA management website with separate files for HTML, CSS, and JavaScript.
+
+**index.html**
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOA Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-home"></i>
+                <span>HOA Manager</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+                <a href="#residents" class="nav-link" data-section="residents">Residents</a>
+                <a href="#maintenance" class="nav-link" data-section="maintenance">Maintenance</a>
+                <a href="#finances" class="nav-link" data-section="finances">Finances</a>
+                <a href="#announcements" class="nav-link" data-section="announcements">Announcements</a>
+                <a href="#documents" class="nav-link" data-section="documents">Documents</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div class="section-header">
+                <h1>Dashboard</h1>
+                <p>Welcome to your HOA Management System</p>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-residents">124</h3>
+                        <p>Total Residents</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="pending-requests">8</h3>
+                        <p>Pending Requests</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="monthly-revenue">$45,200</h3>
+                        <p>Monthly Revenue</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="overdue-fees">12</h3>
+                        <p>Overdue Payments</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>Recent Activities</h3>
+                    <div class="activity-list" id="activity-list">
+                        <!-- Activities will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>Upcoming Events</h3>
+                    <div class="events-list" id="events-list">
+                        <!-- Events will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Residents Section -->
+        <section id="residents" class="content-section">
+            <div class="section-header">
+                <h1>Resident Management</h1>
+                <button class="btn btn-primary" id="add-resident-btn">
+                    <i class="fas fa-plus"></i> Add Resident
+                </button>
+            </div>
+            
+            <div class="search-filter">
+                <input type="text" id="resident-search" placeholder="Search residents...">
+                <select id="unit-filter">
+                    <option value="">All Units</option>
+                    <option value="A">Building A</option>
+                    <option value="B">Building B</option>
+                    <option value="C">Building C</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="residents-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Unit</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="residents-tbody">
+                        <!-- Residents data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Maintenance Section -->
+        <section id="maintenance" class="content-section">
+            <div class="section-header">
+                <h1>Maintenance Requests</h1>
+                <button class="btn btn-primary" id="add-maintenance-btn">
+                    <i class="fas fa-plus"></i> New Request
+                </button>
+            </div>
+            
+            <div class="maintenance-filters">
+                <select id="status-filter">
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                </select>
+                <select id="priority-filter">
+                    <option value="">All Priorities</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+            </div>
+
+            <div class="maintenance-grid" id="maintenance-grid">
+                <!-- Maintenance requests will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Finances Section -->
+        <section id="finances" class="content-section">
+            <div class="section-header">
+                <h1>Financial Management</h1>
+                <button class="btn btn-primary" id="add-transaction-btn">
+                    <i class="fas fa-plus"></i> Add Transaction
+                </button>
+            </div>
+            
+            <div class="finance-summary">
+                <div class="finance-card">
+                    <h3>Total Income</h3>
+                    <p class="amount income">$125,450.00</p>
+                </div>
+                <div class="finance-card">
+                    <h3>Total Expenses</h3>
+                    <p class="amount expense">$89,320.00</p>
+                </div>
+                <div class="finance-card">
+                    <h3>Net Balance</h3>
+                    <p class="amount balance">$36,130.00</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-tbody">
+                        <!-- Transactions will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Announcements Section -->
+        <section id="announcements" class="content-section">
+            <div class="section-header">
+                <h1>Community Announcements</h1>
+                <button class="btn btn-primary" id="add-announcement-btn">
+                    <i class="fas fa-plus"></i> Create Announcement
+                </button>
+            </div>
+            
+            <div class="announcements-grid" id="announcements-grid">
+                <!-- Announcements will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Documents Section -->
+        <section id="documents" class="content-section">
+            <div class="section-header">
+                <h1>Document Library</h1>
+                <button class="btn btn-primary" id="upload-document-btn">
+                    <i class="fas fa-upload"></i> Upload Document
+                </button>
+            </div>
+            
+            <div class="document-categories">
+                <div class="category-filter">
+                    <button class="filter-btn active" data-category="all">All Documents</button>
+                    <button class="filter-btn" data-category="bylaws">Bylaws</button>
+                    <button class="filter-btn" data-category="financial">Financial</button>
+                    <button class="filter-btn" data-category="meeting">Meeting Minutes</button>
+                    <button class="filter-btn" data-category="other">Other</button>
+                </div>
+            </div>
+
+            <div class="documents-grid" id="documents-grid">
+                <!-- Documents will be populated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for forms -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body">
+                <!-- Modal content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification container -->
+    <div id="notification-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+**styles.css**
+```css
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Navigation Styles */
+.navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-logo i {
+    margin-right: 10px;
+    font-size: 1.8rem;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
+/* Main Content */
+.main-content {
+    margin-top: 80px;
+    padding: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-section {
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.section-header h1 {
+    color: #333;
+    font-size: 2rem;
+}
+
+.section-header p {
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* Dashboard Styles */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-card:nth-child(1) .stat-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
+.stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, #f093fb, #f5576c); }
+.stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+.stat-card:nth-child(4) .stat-icon { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+.stat-content h3 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.stat-content p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.dashboard-card h3 {
+    margin-bottom: 1rem;
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+}
+
+.activity-list,
+.events-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.activity-item,
+.event-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.activity-item:last-child,
+.event-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon,
+.event-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.activity-content,
+.event-content {
+    flex: 1;
+}
+
+.activity-content h4,
+.event-content h4 {
+    color: #333;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.activity-content p,
+.event-content p {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* Table Styles */
+.search-filter,
+.maintenance-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-filter input,
+.search-filter select,
+.maintenance-filters select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.search-filter input {
+    flex: 1;
+    max-width: 300px;
+}
+
+.table-container {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-active { background-color: #d4edda; color: #155724; }
+.status-inactive { background-color: #f8d7da; color: #721c24; }
+.status-pending { background-color: #fff3cd; color: #856404; }
+.status-in-progress { background-color: #d1ecf1; color: #0c5460; }
+.status-completed { background-color: #d4edda; color: #155724; }
+
+.priority-low { background-color: #d4edda; color: #155724; }
+.priority-medium { background-color: #fff3cd; color: #856404; }
+.priority-high { background-color: #f8d7da; color: #721c24; }
+.priority-urgent { background-color: #dc3545; color: white; }
+
+/* Maintenance Grid */
+.maintenance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.maintenance-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.maintenance-card:hover {
+    transform: translateY(-5px);
+}
+
+.maintenance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.maintenance-header h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.maintenance-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.maintenance-description {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.maintenance-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* Finance Cards */
+.finance-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.finance-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.finance-card h3 {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.amount {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.amount.income { color: #28a745; }
+.amount.expense { color: #dc3545; }
+.amount.balance { color: #007bff; }
+
+/* Announcements Grid */
+.announcements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.announcement-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-left: 4px solid #667eea;
+}
+
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.announcement-header h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.announcement-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.announcement-content {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.announcement-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Documents Grid */
+.document-categories {
+    margin-bottom: 2rem;
+}
+
+.category-filter {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #667eea;
+    background: transparent;
+    color: #667eea;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #667eea;
+    color: white;
+}
+
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.document-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.document-card:hover {
+    transform: translateY(-5px);
+}
+
+.document-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.document-name {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.document-info {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.document-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.close:hover {
+    color: #333;
+}
+
+#modal-body {
+    padding: 2rem;
+}
+
+.modal-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-header h2 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Notifications */
+#notification-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.notification {
+    padding: 1rem 1.5rem;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    min-width: 300px;
+    animation: slideInRight 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.notification.success { background-color: #28a745; }
+.notification.error { background-color: #dc3545; }
+.notification.warning { background-color: #ffc107; color: #212529; }
+.notification.info { background-color: #17a2b8; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+        padding: 2rem 0;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .maintenance-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .announcements-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .documents-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .search-filter,
+    .maintenance-filters {
+        flex-direction: column;
+    }
+
+    .category-filter {
+        justify-content: center;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+
+    .notification {
+        min-width: auto;
+        width: calc(100vw - 40px);
+        right: 20px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-logo {
+        font-size: 1.2rem;
+    }
+
+    .nav-logo i {
+        font-size: 1.4rem;
+    }
+
+    .section-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    .stat-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .finance-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .amount {
+        font-size: 1.5rem;
+    }
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 1rem; }
+.p-4 { padding: 1.5rem; }
+
+.d-none { display: none; }
+.d-block { display: block; }
+.d-flex { display: flex; }
+.d-grid { display: grid; }
+
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.align-center { align-items: center; }
+
+.w-100 { width: 100%; }
+.h-100 { height: 100%; }
+
+.text-muted { color: #666; }
+.text-primary { color: #667eea; }
+.text-success { color: #28a745; }
+.text-warning { color: #ffc107; }
+.text-danger { color: #dc3545; }
+
+.bg-light { background-color: #f8f9fa; }
+.bg-white { background-color: white; }
+
+.border { border: 1px solid #ddd; }
+.border-radius { border-radius: 5px; }
+
+.shadow { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.shadow-lg { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+```
+
+**script.js**
+```javascript
+// HOA Management System JavaScript
+
+class HOAManager {
+    constructor() {
+        this.currentSection = 'dashboard';
+        this.residents = [];
+        this.maintenanceRequests = [];
+        this.transactions = [];
+        this.announcements = [];
+        this.documents = [];
+        this.activities = [];
+        this.events = [];
+        
+        this.init();
+        this.loadSampleData();
+    }
+
+    init() {
+        // Navigation event listeners
+        this.setupNavigation();
+        
+        // Modal event listeners
+        this.setupModal();
+        
+        // Button event listeners
+        this.setupButtonListeners();
+        
+        // Search and filter listeners
+        this.setupSearchFilters();
+        
+        // Initialize dashboard
+        this.showSection('dashboard');
+    }
+
+    setupNavigation() {
+        // Desktop navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = e.target.dataset.section;
+                this.showSection(section);
+                
+                // Update active link
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+
+        // Mobile hamburger menu
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    }
+
+    setupModal() {
+        const modal = document.getElementById('modal');
+        const closeBtn = modal.querySelector('.close');
+        
+        closeBtn.addEventListener('click', () => {
+            this.hideModal();
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                this.hideModal();
+            }
+        });
+    }
+
+    setupButtonListeners() {
+        // Add resident button
+        document.getElementById('add-resident-btn').addEventListener('click', () => {
+            this.showAddResidentModal();
+        });
+
+        // Add maintenance request button
+        document.getElementById('add-maintenance-btn').addEventListener('click', () => {
+            this.showAddMaintenanceModal();
+        });
+
+        // Add transaction button
+        document.getElementById('add-transaction-btn').addEventListener('click', () => {
+            this.showAddTransactionModal();
+        });
+
+        // Add announcement button
+        document.getElementById('add-announcement-btn').addEventListener('click', () => {
+            this.showAddAnnouncementModal();
+        });
+
+        // Upload document button
+        document.getElementById('upload-document-btn').addEventListener('click', () => {
+            this.showUploadDocumentModal();
+        });
+    }
+
+    setupSearchFilters() {
+        // Resident search
+        document.getElementById('resident-search').addEventListener('input', (e) => {
+            this.filterResidents(e.target.value);
+        });
+
+        // Unit filter
+        document.getElementById('unit-filter').addEventListener('change', (e) => {
+            this.filterResidentsByUnit(e.target.value);
+        });
+
+        // Maintenance filters
+        document.getElementById('status-filter').addEventListener('change', (e) => {
+            this.filterMaintenanceByStatus(e.target.value);
+        });
+
+        document.getElementById('priority-filter').addEventListener('change', (e) => {
+            this.filterMaintenanceByPriority(e.target.value);
+        });
+
+        // Document category filters
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.filterDocuments(e.target.dataset.category);
+            });
+        });
+    }
+
+    showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Show selected section
+        document.getElementById(sectionId).classList.add('active');
+        this.currentSection = sectionId;
+        
+        // Load section data
+        this.loadSectionData(sectionId);
+    }
+
+    loadSectionData(sectionId) {
+        switch(sectionId) {
+            case 'dashboard':
+                this.loadDashboard();
+                break;
+            case 'residents':
+                this.loadResidents();
+                break;
+            case 'maintenance':
+                this.loadMaintenance();
+                break;
+            case 'finances':
+                this.loadFinances();
+                break;
+            case 'announcements':
+                this.loadAnnouncements();
+                break;
+            case 'documents':
+                this.loadDocuments();
+                break;
+        }
+    }
+
+    // Dashboard Methods
+    loadDashboard() {
+        this.loadActivities();
+        this.loadEvents();
+        this.updateStats();
+    }
+
+    loadActivities() {
+        const container = document.getElementById('activity-list');
+        container.innerHTML = '';
+        
+        this.activities.forEach(activity => {
+            const item = document.createElement('div');
+            item.className = 'activity-item';
+            item.innerHTML = `
+                <div class="activity-icon" style="background: ${activity.color}">
+                    <i class="${activity.icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>${activity.title}</h4>
+                    <p>${activity.description} • ${activity.time}</p>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    loadEvents() {
+        const container = document.getElementById('events-list');
+        container.innerHTML = '';
+        
+        this.events.forEach(event => {
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.innerHTML = `
+                <div class="event-icon" style="background: ${event.color}">
+                    <i class="${event.icon}"></i>
+                </div>
+                <div class="event-content">
+                    <h4>${event.title}</h4>
+                    <p>${event.date} at ${event.time}</p>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    updateStats() {
+        document.getElementById('total-residents').textContent = this.residents.length;
+        document.getElementById('pending-requests').textContent = 
+            this.maintenanceRequests.filter(req => req.status === 'pending').length;
+        document.getElementById('overdue-fees').textContent = 
+            this.residents.filter(res => res.status === 'inactive').length;
+    }
+
+    // Resident Methods
+    loadResidents() {
+        const tbody = document.getElementById('residents-tbody');
+        tbody.innerHTML = '';
+        
+        this.residents.forEach((resident, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${resident.name}</td>
+                <td>${resident.unit}</td>
+                <td>${resident.email}</td>
+                <td>${resident.phone}</td>
+                <td><span class="status-badge status-${resident.status}">${resident.status}</span></td>
+                <td>
+                    <button class="btn btn-small btn-primary" onclick="hoaManager.editResident(${index})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-small btn-danger" onclick="hoaManager.deleteResident(${index})">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    filterResidents(searchTerm) {
+        const tbody = document.getElementById('residents-tbody');
+        const rows = tbody.querySelectorAll('tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+        });
+    }
+
+    filterResidentsByUnit(unit) {
+        const tbody = document.getElementById('residents-tbody');
+        const rows = tbody.querySelectorAll('tr');
+        
+        rows.forEach(row => {
+            if (!unit) {
+                row.style.display = '';
+                return;
+            }
+            
+            const unitCell = row.cells[1].textContent;
+            row.style.display = unitCell.includes(unit) ? '' : 'none';
+        });
+    }
+
+    // Maintenance Methods
+    loadMaintenance() {
+        const container = document.getElementById('maintenance-grid');
+        container.innerHTML = '';
+        
+        this.maintenanceRequests.forEach((request, index) => {
+            const card = document.createElement('div');
+            card.className = 'maintenance-card';
+            card.innerHTML = `
+                <div class="maintenance-header">
+                    <div>
+                        <h3>${request.title}</h3>
+                        <div class="maintenance-meta">
+                            <span><i class="fas fa-user"></i> ${request.resident}</span>
+                            <span><i class="fas fa-home"></i> ${request.unit}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="status-badge status-${request.status}">${request.status}</span>
+                        <span class="status-badge priority-${request.priority}">${request.priority}</span>
+                    </div>
+                </div>
+                <div class="maintenance-description">
+                    ${request.description}
+                </div>
+                <div class="maintenance-meta">
+                    <span><i class="fas fa-calendar"></i> ${request.date}</span>
+                </div>
+                <div class="maintenance-actions">
+                    <button class="btn btn-small btn-primary" onclick="hoaManager.editMaintenance(${index})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-small btn-success" onclick="hoaManager.completeMaintenance(${index})">
+                        <i class="fas fa-check"></i> Complete
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    filterMaintenanceByStatus(status) {
+        const cards = document.querySelectorAll('.maintenance-card');
+        cards.forEach(card => {
+            if (!status) {
+                card.style.display = '';
+                return;
+            }
+            
+            const statusBadge = card.querySelector('.status-badge');
+            card.style.display = statusBadge.textContent.includes(status) ? '' : 'none';
+        });
+    }
+
+    filterMaintenanceByPriority(priority) {
+        const cards = document.querySelectorAll('.maintenance-card');
+        cards.forEach(card => {
+            if (!priority) {
+                card.style.display = '';
+                return;
+            }
+            
+            const priorityBadge = card.querySelector('.priority-' + priority);
+            card.style.display = priorityBadge ? '' : 'none';
+        });
+    }
+
+    // Finance Methods
+    loadFinances() {
+        const tbody = document.getElementById('transactions-tbody');
+        tbody.innerHTML = '';
+        
+        this.transactions.forEach((transaction, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${transaction.date}</td>
+                <td>${transaction.description}</td>
+                <td>${transaction.category}</td>
+                <td><span class="status-badge status-${transaction.type}">${transaction.type}</span></td>
+                <td class="amount ${transaction.type}">$${transaction.amount.toLocaleString()}</td>
+                <td>
+                    <button class="btn btn-small btn-primary" onclick="hoaManager.editTransaction(${index})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-small btn-danger" onclick="hoaManager.deleteTransaction(${index})">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Announcement Methods
+    loadAnnouncements() {
+        const container = document.getElementById('announcements-grid');
+        container.innerHTML = '';
+        
+        this.announcements.forEach((announcement, index) => {
+            const card = document.createElement('div');
+            card.className = 'announcement-card';
+            card.innerHTML = `
+                <div class="announcement-header">
+                    <div>
+                        <h3>${announcement.title}</h3>
+                        <span class="announcement-date">${announcement.date}</span>
+                    </div>
+                </div>
+                <div class="announcement-content">
+                    ${announcement.content}
+                </div>
+                <div class="announcement-footer">
+                    <span class="text-muted">By ${announcement.author}</span>
+                    <div>
+                        <button class="btn btn-small btn-primary" onclick="hoaManager.editAnnouncement(${index})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-small btn-danger" onclick="hoaManager.deleteAnnouncement(${index})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Document Methods
+    loadDocuments() {
+        const container = document.getElementById('documents-grid');
+        container.innerHTML = '';
+        
+        this.documents.forEach((document, index) => {
+            const card = document.createElement('div');
+            card.className = 'document-card';
+            card.dataset.category = document.category;
+            card.innerHTML = `
+                <div class="document-icon">
+                    <i class="${document.icon}"></i>
+                </div>
+                <div class="document-name">${document.name}</div>
+                <div class="document-info">
+                    <div>${document.category} • ${document.size}</div>
+                    <div>Uploaded: ${document.date}</div>
+                </div>
+                <div class="document-actions">
+                    <button class="btn btn-small btn-primary" onclick="hoaManager.downloadDocument(${index})">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="btn btn-small btn-danger" onclick="hoaManager.deleteDocument(${index})">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    filterDocuments(category) {
+        const cards = document.querySelectorAll('.document-card');
+        cards.forEach(card => {
+            if (category === 'all') {
+                card.style.display = '';
+            } else {
+                card.style.display = card.dataset.category === category ? '' : 'none';
+            }
+        });
+    }
+
+    // Modal Methods
+    showModal(title, content) {
+        const modal = document.getElementById('modal');
+        const modalBody = document.getElementById('modal-body');
+        
+        modalBody.innerHTML = `
+            <div class="modal-header">
+                <h2>${title}</h2>
+            </div>
+            ${content}
+        `;
+        
+        modal.style.display = 'block';
+    }
+
+    hideModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    showAddResidentModal() {
+        const content = `
+            <form id="add-resident-form">
+                <div class="form-group">
+                    <label for="resident-name">Full Name</label>
+                    <input type="text" id="resident-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="resident-unit">Unit Number</label>
+                    <input type="text" id="resident-unit" required>
+                </div>
+                <div class="form-group">
+                    <label for="resident-email">Email</label>
+                    <input type="email" id="resident-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="resident-phone">Phone</label>
+                    <input type="tel" id="resident-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="resident-status">Status</label>
+                    <select id="resident-status" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hoaManager.hideModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Resident</button>
+                </div>
+            </form>
+        `;
+        
+        this.showModal('Add New Resident', content);
+        
+        document.getElementById('add-resident-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.addResident();
+        });
+    }
+
+    showAddMaintenanceModal() {
+        const content = `
+            <form id="add-maintenance-form">
+                <div class="form-group">
+                    <label for="maintenance-title">Title</label>
+                    <input type="text" id="maintenance-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="maintenance-resident">Resident</label>
+                    <select id="maintenance-resident" required>
+                        ${this.residents.map(r => `<option value="${r.name}">${r.name} - ${r.unit}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="maintenance-priority">Priority</label>
+                    <select id="maintenance-priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="maintenance-description">Description</label>
+                    <textarea id="maintenance-description" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hoaManager.hideModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Request</button>
+                </div>
+            </form>
+        `;
+        
+        this.showModal('New Maintenance Request', content);
+        
+        document.getElementById('add-maintenance-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.addMaintenanceRequest();
+        });
+    }
+
+    showAddTransactionModal() {
+        const content = `
+            <form id="add-transaction-form">
+                <div class="form-group">
+                    <label for="transaction-description">Description</label>
+                    <input type="text" id="transaction-description" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-category">Category</label>
+                    <select id="transaction-category" required>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="utilities">Utilities</option>
+                        <option value="insurance">Insurance</option>
+                        <option value="landscaping">Landscaping</option>
+                        <option value="fees">HOA Fees</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-type">Type</label>
+                    <select id="transaction-type" required>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-amount">Amount</label>
+                    <input type="number" id="transaction-amount" step="0.01" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hoaManager.hideModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Transaction</button>
+                </div>
+            </form>
+        `;
+        
+        this.showModal('Add Transaction', content);
+        
+        document.getElementById('add-transaction-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.addTransaction();
+        });
+    }
+
+    showAddAnnouncementModal() {
+        const content = `
+            <form id="add-announcement-form">
+                <div class="form-group">
+                    <label for="announcement-title">Title</label>
+                    <input type="text" id="announcement-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="announcement-content">Content</label>
+                    <textarea id="announcement-content" style="height: 150px;" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="announcement-author">Author</label>
+                    <input type="text" id="announcement-author" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hoaManager.hideModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Announcement</button>
+                </div>
+            </form>
+        `;
+        
+        this.showModal('Create Announcement', content);
+        
+        document.getElementById('add-announcement-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.addAnnouncement();
+        });
+    }
+
+    showUploadDocumentModal() {
+        const content = `
+            <form id="upload-document-form">
+                <div class="form-group">
+                    <label for="document-name">Document Name</label>
+                    <input type="text" id="document-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="document-category">Category</label>
+                    <select id="document-category" required>
+                        <option value="bylaws">Bylaws</option>
+                        <option value="financial">Financial</option>
+                        <option value="meeting">Meeting Minutes</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="document-file">File</label>
+                    <input type="file" id="document-file" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hoaManager.hideModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Upload Document</button>
+                </div>
+            </form>
+        `;
+        
+        this.showModal('Upload Document', content);
+        
+        document.getElementById('upload-document-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.uploadDocument();
+        });
+    }
+
+    // CRUD Operations
+    addResident() {
+        const resident = {
+            name: document.getElementById('resident-name').value,
+            unit: document.getElementById('resident-unit').value,
+            email: document.getElementById('resident-email').value,
+            phone: document.getElementById('resident-phone').value,
+            status: document.getElementById('resident-status').value
+        };
+        
+        this.residents.push(resident);
+        this.loadResidents();
+        this.hideModal();
+        this.showNotification('Resident added successfully!', 'success');
+        this.updateStats();
+    }
+
+    addMaintenanceRequest() {
+        const selectedResident = this.residents.find(r => r.name === document.getElementById('maintenance-resident').value);
+        const request = {
+            title: document.getElementById('maintenance-title').value,
+            resident: document.getElementById('maintenance-resident').value,
+            unit: selectedResident ? selectedResident.unit : 'N/A',
+            priority: document.getElementById('maintenance-priority').value,
+            description: document.getElementById('maintenance-description').value,
+            status: 'pending',
+            date: new Date().toLocaleDateString()
+        };
+        
+        this.maintenanceRequests.push(request);
+        this.loadMaintenance();
+        this.hideModal();
+        this.showNotification('Maintenance request created successfully!', 'success');
+        this.updateStats();
+    }
+
+    addTransaction() {
+        const transaction = {
+            description: document.getElementById('transaction-description').value,
+            category: document.getElementById('transaction-category').value,
+            type: document.getElementById('transaction-type').value,
+            amount: parseFloat(document.getElementById('transaction-amount').value),
+            date: new Date().toLocaleDateString()
+        };
+        
+        this.transactions.push(transaction);
+        this.loadFinances();
+        this.hideModal();
+        this.showNotification('Transaction added successfully!', 'success');
+    }
+
+    addAnnouncement() {
+        const announcement = {
+            title: document.getElementById('announcement-title').value,
+            content: document.getElementById('announcement-content').value,
+            author: document.getElementById('announcement-author').value,
+            date: new Date().toLocaleDateString()
+        };
+        
+        this.announcements.push(announcement);
+        this.loadAnnouncements();
+        this.hideModal();
+        this.showNotification('Announcement created successfully!', 'success');
+    }
+
+    uploadDocument() {
+        const file = document.getElementById('document-file').files[0];
+        const document = {
+            name: document.getElementById('document-name').value,
+            category: document.getElementById('document-category').value,
+            size: file ? this.formatFileSize(file.size) : 'Unknown',
+            date: new Date().toLocaleDateString(),
+            icon: this.getDocumentIcon(document.getElementById('document-category').value)
+        };
+        
+        this.documents.push(document);
+        this.loadDocuments();
+        this.hideModal();
+        this.showNotification('Document uploaded successfully!', 'success');
+    }
+
+    // Edit and Delete Operations
+    editResident(index) {
+        this.showNotification('Edit functionality would be implemented here', 'info');
+    }
+
+    deleteResident(index) {
+        if (confirm('Are you sure you want to delete this resident?')) {
+            this.residents.splice(index, 1);
+            this.loadResidents();
+            this.showNotification('Resident deleted successfully!', 'success');
+            this.updateStats();
+        }
+    }
+
+    editMaintenance(index) {
+        this.showNotification('Edit functionality would be implemented here', 'info');
+    }
+
+    completeMaintenance(index) {
+        this.maintenanceRequests[index].status = 'completed';
+        this.loadMaintenance();
+        this.showNotification('Maintenance request marked as completed!', 'success');
+        this.updateStats();
+    }
+
+    editTransaction(index) {
+        this.showNotification('Edit functionality would be implemented here', 'info');
+    }
+
+    deleteTransaction(index) {
+        if (confirm('Are you sure you want to delete this transaction?')) {
+            this.transactions.splice(index, 1);
+            this.loadFinances();
+            this.showNotification('Transaction deleted successfully!', 'success');
+        }
+    }
+
+    editAnnouncement(index) {
+        this.showNotification('Edit functionality would be implemented here', 'info');
+    }
+
+    deleteAnnouncement(index) {
+        if (confirm('Are you sure you want to delete this announcement?')) {
+            this.announcements.splice(index, 1);
+            this.loadAnnouncements();
+            this.showNotification('Announcement deleted successfully!', 'success');
+        }
+    }
+
+    downloadDocument(index) {
+        this.showNotification('Document download would be implemented here', 'info');
+    }
+
+    deleteDocument(index) {
+        if (confirm('Are you sure you want to delete this document?')) {
+            this.documents.splice(index, 1);
+            this.loadDocuments();
+            this.showNotification('Document deleted successfully!', 'success');
+        }
+    }
+
+    // Utility Methods
+    showNotification(message, type = 'info') {
+        const container = document.getElementById('notification-container');
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        container.appendChild(notification);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.parentElement.removeChild(notification);
+            }
+        }, 5000);
+        
+        // Remove on click
+        notification.addEventListener('click', () => {
+            if (notification.parentElement) {
+                notification.parentElement.removeChild(notification);
+            }
+        });
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    getDocumentIcon(category) {
+        const icons = {
+            'bylaws': 'fas fa-gavel',
+            'financial': 'fas fa-chart-line',
+            'meeting': 'fas fa-users',
+            'other': 'fas fa-file-alt'
+        };
+        return icons[category] || 'fas fa-file';
+    }
+
+    // Sample Data
+    loadSampleData() {
+        // Sample residents
+        this.residents = [
+            { name: 'John Smith', unit: 'A-101', email: 'john.smith@email.com', phone: '(555) 123-4567', status: 'active' },
+            { name: 'Sarah Johnson', unit: 'A-102', email: 'sarah.johnson@email.com', phone: '(555) 234-5678', status: 'active' },
+            { name: 'Mike Brown', unit: 'B-201', email: 'mike.brown@email.com', phone: '(555) 345-6789', status: 'inactive' },
+            { name: 'Lisa Wilson', unit: 'B-202', email: 'lisa.wilson@email.com', phone: '(555) 456-7890', status: 'active' },
+            { name: 'David Lee', unit: 'C-301', email: 'david.lee@email.com', phone: '(555) 567-8901', status: 'active' }
+        ];
+
+        // Sample maintenance requests
+        this.maintenanceRequests = [
+            {
+                title: 'Leaky Faucet',
+                resident: 'John Smith',
+                unit: 'A-101',
+                priority: 'medium',
+                description: 'Kitchen faucet has been leaking for several days. Needs immediate attention.',
+                status: 'pending',
+                date: '2024-01-15'
+            },
+            {
+                title: 'Broken AC Unit',
+                resident: 'Sarah Johnson',
+                unit: 'A-102',
+                priority: 'high',
+                description: 'Air conditioning unit stopped working. No cool air coming out.',
+                status: 'in-progress',
+                date: '2024-01-14'
+            },
+            {
+                title: 'Garage Door Issues',
+                resident: 'Lisa Wilson',
+                unit: 'B-202',
+                priority: 'low',
+                description: 'Garage door makes loud noise when opening and closing.',
+                status: 'completed',
+                date: '2024-01-10'
+            }
+        ];
+
+        // Sample transactions
+        this.transactions = [
+            { description: 'HOA Monthly Fees Collection', category: 'fees', type: 'income', amount: 15000, date: '2024-01-01' },
+            { description: 'Landscaping Service', category: 'landscaping', type: 'expense', amount: 2500, date: '2024-01-05' },
+            { description: 'Pool Maintenance', category: 'maintenance', type: 'expense', amount: 800, date: '2024-01-08' },
+            { description: 'Utility Bills', category: 'utilities', type: 'expense', amount: 1200, date: '2024-01-10' },
+            { description: 'Insurance Payment', category: 'insurance', type: 'expense', amount: 3500, date: '2024-01-12' }
+        ];
+
+        // Sample announcements
+        this.announcements = [
+            {
+                title: 'Pool Maintenance Schedule',
+                content: 'The community pool will be closed for routine maintenance from January 20th to January 22nd. We apologize for any inconvenience.',
+                author: 'HOA Board',
+                date: '2024-01-15'
+            },
+            {
+                title: 'New Parking Regulations',
+                content: 'Please be aware of the new parking regulations effective February 1st. Guest parking is limited to 48 hours maximum.',
+                author: 'Property Manager',
+                date: '2024-01-12'
+            },
+            {
+                title: 'Community Meeting',
+                content: 'The monthly community meeting will be held on January 25th at 7:00 PM in the clubhouse. All residents are encouraged to attend.',
+                author: 'HOA Board',
+                date: '2024-01-10'
+            }
+        ];
+
+        // Sample documents
+        this.documents = [
+            { name: 'HOA Bylaws 2024', category: 'bylaws', size: '2.5 MB', date: '2024-01-01', icon: 'fas fa-gavel' },
+            { name: 'Annual Budget Report', category: 'financial', size: '1.8 MB', date: '2024-01-05', icon: 'fas fa-chart-line' },
+            { name: 'December Meeting Minutes', category: 'meeting', size: '856 KB', date: '2024-01-03', icon: 'fas fa-users' },
+            { name: 'Insurance Policy Document', category: 'other', size: '3.2 MB', date: '2024-01-02', icon: 'fas fa-file-alt' }
+        ];
+
+        // Sample activities
+        this.activities = [
+            { title: 'New Resident Added', description: 'John Smith joined unit A-101', time: '2 hours ago', icon: 'fas fa-user-plus', color: '#28a745' },
+            { title: 'Maintenance Completed', description: 'Fixed heating issue in B-203', time: '4 hours ago', icon: 'fas fa-tools', color: '#17a2b8' },
+            { title: 'Payment Received', description: 'HOA fee payment from C-301', time: '1 day ago', icon: 'fas fa-dollar-sign', color: '#ffc107' },
+            { title: 'Document Uploaded', description: 'New meeting minutes added', time: '2 days ago', icon: 'fas fa-file-upload', color: '#6f42c1' }
+        ];
+
+        // Sample events
+        this.events = [
+            { title: 'Community Meeting', date: 'Jan 25', time: '7:00 PM', icon: 'fas fa-users', color: '#667eea' },
+            { title: 'Pool Party', date: 'Feb 10', time: '2:00 PM', icon: 'fas fa-swimming-pool', color: '#4facfe' },
+            { title: 'Landscaping Day', date: 'Feb 15', time: '9:00 AM', icon: 'fas fa-seedling', color: '#43e97b' },
+            { title: 'Board Elections', date: 'Mar 1', time: '6:00 PM', icon: 'fas fa-vote-yea', color: '#f093fb' }
+        ];
+    }
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    window.hoaManager = new HOAManager();
+});
+```
+
+This HOA Management System includes:
+
+**Features:**
+1. **Dashboard** - Overview with statistics, recent activities, and upcoming events
+2. **Resident Management** - Add, edit, delete, search and filter residents
+3. **Maintenance Requests** - Track and manage maintenance requests with priorities
+4. **Financial Management** - Track income/expenses and transactions
+5. **Announcements** - Create and manage community announcements
+6. **Document Library** - Upload and categorize important documents
+
+**Technical Features:**
+- Fully responsive design
+- Modern CSS with gradients and animations
+- Modular JavaScript with classes
+- Modal forms for data entry
+- Search and filtering functionality
+- Notification system
+- Mobile-friendly navigation
+
+**To use this system:**
+1. Save each file with its respective extension
+2. Open `index.html` in a web browser
+3. Navigate through different sections using the top navigation
+4. Use the various "Add" buttons to create new entries
+5. The system includes sample data for demonstration
+
+The system is fully functional for demonstration purposes and can be extended with backend integration for real-world use.

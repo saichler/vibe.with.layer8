@@ -15,6 +15,7 @@ import (
 	"github.com/saichler/reflect/go/reflect/introspecting"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/antropic"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/consts"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/project/service"
 	"github.com/saichler/vibe.with.layer8/go/types"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -119,5 +120,39 @@ func TestAnthropicResponse(t *testing.T) {
 		for _, line := range lines {
 			fmt.Println(line)
 		}
+	}
+}
+
+func TestAnthropicResponse1(t *testing.T) {
+	data, _ := os.ReadFile("project2.data")
+	project := &types.Project{}
+	proto.Unmarshal(data, project)
+	os.WriteFile("001.request", []byte(project.Messages[0].Content), 0777)
+	os.WriteFile("001.respond", []byte(project.Messages[1].Content), 0777)
+}
+
+func TestSimulator(t *testing.T) {
+	sim := service.NewAnthropicSimulator()
+	project := &types.Project{}
+	project.Name = "Test"
+	project.User = "User"
+	project.ApiKey = os.Getenv(consts.ANTHROPIC_ENV)
+
+	err := sim.Do("test 1", project)
+	if err != nil {
+		t.Fail()
+		fmt.Println(err)
+		return
+	}
+	if len(project.Messages) != 2 || project.Messages[0].Content == "" || project.Messages[1].Content == "" {
+		t.Fail()
+		fmt.Println("Step 1 failed")
+		return
+	}
+	err = sim.Do("Set the total Residents to be 16", project)
+	if err != nil {
+		t.Fail()
+		fmt.Println(err)
+		return
 	}
 }

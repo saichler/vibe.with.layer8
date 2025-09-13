@@ -35,7 +35,7 @@ func NewAnthropicClient() *AnthropicClient {
 	return &AnthropicClient{httpClient: httpClient}
 }
 
-func (this AnthropicClient) Do(text string, project *types.Project) error {
+func (this *AnthropicClient) Do(text string, project *types.Project) error {
 	body := &types.ClaudeRequest{}
 	body.Model = consts.ANTHROPIC_MODEL
 	body.MaxTokens = 64000

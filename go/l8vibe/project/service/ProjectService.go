@@ -27,7 +27,8 @@ const (
 
 // ProjectService implements ifs.IServiceHandler interface
 type ProjectService struct {
-	cache ifs.IDistributedCache
+	cache     ifs.IDistributedCache
+	simulator *AntropicSimulator
 }
 
 // Activate activates the ProjectService
@@ -40,6 +41,7 @@ func (this *ProjectService) Activate(serviceName string, serviceArea byte, resou
 	initData := this.load(resources)
 	this.cache = dcache.NewDistributedCacheNoSync(ServiceName, ServiceArea, &types.Project{}, initData,
 		listener, resources)
+	this.simulator = NewAnthropicSimulator()
 	return nil
 }
 
@@ -120,8 +122,22 @@ func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IE
 	if project.Name == "" || project.User == "" || project.Messages == nil || len(project.Messages) == 0 {
 		return object.NewError("Patch request for project is invalid")
 	}
+	current, _ := this.cache.Get(project)
+	currentProj := current.(*types.Project)
+	err := this.simulator.Do(project.Messages[0].Content, currentProj)
+	if err == nil {
+		antropic.ParseMessages(currentProj)
+		this.cache.Put(currentProj, elements.Notification())
+		saveProject(currentProj)
+		common.WebServer.LoadWebUI()
+		project.Messages = make([]*types.Message, 2)
+		project.Messages[0] = currentProj.Messages[len(currentProj.Messages)-2]
+		project.Messages[1] = currentProj.Messages[len(currentProj.Messages)-1]
+		return object.New(nil, project)
+	}
+
 	this.appendMessage(project)
-	project.Messages = append(project.Messages, &types.Message{Role: "assistant", Content: "Echo "})
+	project.Messages = append(project.Messages, &types.Message{Role: "assistant", Content: "End of simulation"})
 	this.appendMessage(project)
 	return object.New(nil, project)
 }

@@ -1,0 +1,188 @@
+I'll update the JavaScript file to set the total residents to 16 by adding more sample residents to the data.
+
+**Updated script.js** (only showing the modified `loadSampleData()` method - the rest remains the same):
+
+```javascript
+// Sample Data
+loadSampleData() {
+    // Sample residents (Updated to 16 residents)
+    this.residents = [
+        { name: 'John Smith', unit: 'A-101', email: 'john.smith@email.com', phone: '(555) 123-4567', status: 'active' },
+        { name: 'Sarah Johnson', unit: 'A-102', email: 'sarah.johnson@email.com', phone: '(555) 234-5678', status: 'active' },
+        { name: 'Mike Brown', unit: 'B-201', email: 'mike.brown@email.com', phone: '(555) 345-6789', status: 'inactive' },
+        { name: 'Lisa Wilson', unit: 'B-202', email: 'lisa.wilson@email.com', phone: '(555) 456-7890', status: 'active' },
+        { name: 'David Lee', unit: 'C-301', email: 'david.lee@email.com', phone: '(555) 567-8901', status: 'active' },
+        { name: 'Jennifer Garcia', unit: 'A-103', email: 'jennifer.garcia@email.com', phone: '(555) 678-9012', status: 'active' },
+        { name: 'Robert Martinez', unit: 'A-104', email: 'robert.martinez@email.com', phone: '(555) 789-0123', status: 'active' },
+        { name: 'Emily Davis', unit: 'B-203', email: 'emily.davis@email.com', phone: '(555) 890-1234', status: 'inactive' },
+        { name: 'Christopher Taylor', unit: 'B-204', email: 'christopher.taylor@email.com', phone: '(555) 901-2345', status: 'active' },
+        { name: 'Amanda Anderson', unit: 'C-302', email: 'amanda.anderson@email.com', phone: '(555) 012-3456', status: 'active' },
+        { name: 'Daniel Thomas', unit: 'C-303', email: 'daniel.thomas@email.com', phone: '(555) 123-4567', status: 'active' },
+        { name: 'Michelle White', unit: 'A-105', email: 'michelle.white@email.com', phone: '(555) 234-5678', status: 'active' },
+        { name: 'Kevin Jackson', unit: 'B-205', email: 'kevin.jackson@email.com', phone: '(555) 345-6789', status: 'inactive' },
+        { name: 'Nicole Harris', unit: 'C-304', email: 'nicole.harris@email.com', phone: '(555) 456-7890', status: 'active' },
+        { name: 'Ryan Clark', unit: 'A-106', email: 'ryan.clark@email.com', phone: '(555) 567-8901', status: 'active' },
+        { name: 'Jessica Lewis', unit: 'B-206', email: 'jessica.lewis@email.com', phone: '(555) 678-9012', status: 'active' }
+    ];
+
+    // Sample maintenance requests
+    this.maintenanceRequests = [
+        {
+            title: 'Leaky Faucet',
+            resident: 'John Smith',
+            unit: 'A-101',
+            priority: 'medium',
+            description: 'Kitchen faucet has been leaking for several days. Needs immediate attention.',
+            status: 'pending',
+            date: '2024-01-15'
+        },
+        {
+            title: 'Broken AC Unit',
+            resident: 'Sarah Johnson',
+            unit: 'A-102',
+            priority: 'high',
+            description: 'Air conditioning unit stopped working. No cool air coming out.',
+            status: 'in-progress',
+            date: '2024-01-14'
+        },
+        {
+            title: 'Garage Door Issues',
+            resident: 'Lisa Wilson',
+            unit: 'B-202',
+            priority: 'low',
+            description: 'Garage door makes loud noise when opening and closing.',
+            status: 'completed',
+            date: '2024-01-10'
+        },
+        {
+            title: 'Water Pressure Problem',
+            resident: 'Jennifer Garcia',
+            unit: 'A-103',
+            priority: 'medium',
+            description: 'Low water pressure in bathroom shower.',
+            status: 'pending',
+            date: '2024-01-16'
+        },
+        {
+            title: 'Electrical Outlet Not Working',
+            resident: 'Robert Martinez',
+            unit: 'A-104',
+            priority: 'high',
+            description: 'Main living room outlet stopped working completely.',
+            status: 'pending',
+            date: '2024-01-17'
+        },
+        {
+            title: 'Window Lock Broken',
+            resident: 'Amanda Anderson',
+            unit: 'C-302',
+            priority: 'low',
+            description: 'Bedroom window lock needs replacement.',
+            status: 'pending',
+            date: '2024-01-18'
+        },
+        {
+            title: 'Dishwasher Leak',
+            resident: 'Michelle White',
+            unit: 'A-105',
+            priority: 'urgent',
+            description: 'Dishwasher is leaking water onto kitchen floor.',
+            status: 'pending',
+            date: '2024-01-19'
+        },
+        {
+            title: 'Ceiling Fan Noise',
+            resident: 'Nicole Harris',
+            unit: 'C-304',
+            priority: 'low',
+            description: 'Ceiling fan making unusual grinding noise.',
+            status: 'pending',
+            date: '2024-01-20'
+        }
+    ];
+
+    // Sample transactions
+    this.transactions = [
+        { description: 'HOA Monthly Fees Collection', category: 'fees', type: 'income', amount: 15000, date: '2024-01-01' },
+        { description: 'Landscaping Service', category: 'landscaping', type: 'expense', amount: 2500, date: '2024-01-05' },
+        { description: 'Pool Maintenance', category: 'maintenance', type: 'expense', amount: 800, date: '2024-01-08' },
+        { description: 'Utility Bills', category: 'utilities', type: 'expense', amount: 1200, date: '2024-01-10' },
+        { description: 'Insurance Payment', category: 'insurance', type: 'expense', amount: 3500, date: '2024-01-12' },
+        { description: 'Emergency Repairs', category: 'maintenance', type: 'expense', amount: 1800, date: '2024-01-14' },
+        { description: 'Late Fee Collection', category: 'fees', type: 'income', amount: 450, date: '2024-01-16' },
+        { description: 'Security System Upgrade', category: 'maintenance', type: 'expense', amount: 2200, date: '2024-01-18' }
+    ];
+
+    // Sample announcements
+    this.announcements = [
+        {
+            title: 'Pool Maintenance Schedule',
+            content: 'The community pool will be closed for routine maintenance from January 20th to January 22nd. We apologize for any inconvenience.',
+            author: 'HOA Board',
+            date: '2024-01-15'
+        },
+        {
+            title: 'New Parking Regulations',
+            content: 'Please be aware of the new parking regulations effective February 1st. Guest parking is limited to 48 hours maximum.',
+            author: 'Property Manager',
+            date: '2024-01-12'
+        },
+        {
+            title: 'Community Meeting',
+            content: 'The monthly community meeting will be held on January 25th at 7:00 PM in the clubhouse. All residents are encouraged to attend.',
+            author: 'HOA Board',
+            date: '2024-01-10'
+        },
+        {
+            title: 'Security Camera Installation',
+            content: 'New security cameras will be installed in common areas next week. This is part of our ongoing effort to improve community safety.',
+            author: 'Security Committee',
+            date: '2024-01-18'
+        },
+        {
+            title: 'Landscaping Improvements',
+            content: 'We will be upgrading the landscaping around the main entrance. Work will begin on February 5th and is expected to take one week.',
+            author: 'HOA Board',
+            date: '2024-01-20'
+        }
+    ];
+
+    // Sample documents
+    this.documents = [
+        { name: 'HOA Bylaws 2024', category: 'bylaws', size: '2.5 MB', date: '2024-01-01', icon: 'fas fa-gavel' },
+        { name: 'Annual Budget Report', category: 'financial', size: '1.8 MB', date: '2024-01-05', icon: 'fas fa-chart-line' },
+        { name: 'December Meeting Minutes', category: 'meeting', size: '856 KB', date: '2024-01-03', icon: 'fas fa-users' },
+        { name: 'Insurance Policy Document', category: 'other', size: '3.2 MB', date: '2024-01-02', icon: 'fas fa-file-alt' },
+        { name: 'Reserve Fund Report', category: 'financial', size: '1.2 MB', date: '2024-01-08', icon: 'fas fa-chart-line' },
+        { name: 'Community Rules & Regulations', category: 'bylaws', size: '1.5 MB', date: '2024-01-10', icon: 'fas fa-gavel' },
+        { name: 'November Meeting Minutes', category: 'meeting', size: '742 KB', date: '2024-01-12', icon: 'fas fa-users' }
+    ];
+
+    // Sample activities
+    this.activities = [
+        { title: 'New Resident Added', description: 'Jessica Lewis joined unit B-206', time: '1 hour ago', icon: 'fas fa-user-plus', color: '#28a745' },
+        { title: 'Maintenance Completed', description: 'Fixed heating issue in B-203', time: '3 hours ago', icon: 'fas fa-tools', color: '#17a2b8' },
+        { title: 'Payment Received', description: 'HOA fee payment from C-301', time: '5 hours ago', icon: 'fas fa-dollar-sign', color: '#ffc107' },
+        { title: 'Document Uploaded', description: 'New meeting minutes added', time: '1 day ago', icon: 'fas fa-file-upload', color: '#6f42c1' },
+        { title: 'Maintenance Request', description: 'New request from A-105', time: '1 day ago', icon: 'fas fa-wrench', color: '#dc3545' },
+        { title: 'Announcement Posted', description: 'Security camera installation notice', time: '2 days ago', icon: 'fas fa-bullhorn', color: '#fd7e14' }
+    ];
+
+    // Sample events
+    this.events = [
+        { title: 'Community Meeting', date: 'Jan 25', time: '7:00 PM', icon: 'fas fa-users', color: '#667eea' },
+        { title: 'Pool Party', date: 'Feb 10', time: '2:00 PM', icon: 'fas fa-swimming-pool', color: '#4facfe' },
+        { title: 'Landscaping Day', date: 'Feb 15', time: '9:00 AM', icon: 'fas fa-seedling', color: '#43e97b' },
+        { title: 'Board Elections', date: 'Mar 1', time: '6:00 PM', icon: 'fas fa-vote-yea', color: '#f093fb' },
+        { title: 'Community BBQ', date: 'Mar 15', time: '12:00 PM', icon: 'fas fa-hamburger', color: '#ff6b6b' }
+    ];
+}
+```
+
+Now the system will show:
+- **16 total residents** in the dashboard statistics
+- **8 pending maintenance requests** (updated to reflect more realistic data with the increased resident count)
+- **3 overdue payments** (residents with 'inactive' status)
+- More diverse sample data across all sections
+
+The dashboard will automatically update to show "16" in the Total Residents card, and you'll see all 16 residents when you navigate to the Residents section. I've also added more maintenance requests, announcements, documents, and activities to make the system feel more realistic with the larger resident count.

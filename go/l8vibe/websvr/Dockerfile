@@ -8,5 +8,6 @@ RUN go build -o websvr
 FROM saichler/l8vibe-security:latest AS final
 COPY --from=build /home/src/github.com/saichler/build/websvr /home/run/websvr
 COPY ./web /home/run/web
+COPY ./resources /home/run/resources
 
 ENTRYPOINT ["/home/run/websvr"]
