@@ -240,6 +240,12 @@ class WorkspaceManager {
         
         if (projectNameEl && this.currentProject) {
             projectNameEl.textContent = this.currentProject.name;
+            
+            // Build dynamic path to index.html and display in workspace preview
+            if (this.currentProject.user && this.currentProject.name) {
+                const dynamicPath = `./workspace/${this.currentProject.user}/${this.currentProject.name}/index.html`;
+                this.updatePreviewWithPath(dynamicPath);
+            }
         }
     }
 
@@ -296,6 +302,17 @@ class WorkspaceManager {
         }
         
         this.hasActivePreview = true;
+    }
+
+    // Update preview with project path
+    updatePreviewWithPath(path) {
+        const previewFrame = document.getElementById('previewFrame');
+        
+        if (previewFrame) {
+            // Load the actual webpage at the path
+            previewFrame.src = path;
+            this.hideEmptyState();
+        }
     }
 
     // Update preview with new content

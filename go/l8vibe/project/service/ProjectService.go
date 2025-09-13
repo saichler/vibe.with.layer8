@@ -3,6 +3,7 @@ package service
 import (
 	"os"
 	strings2 "strings"
+	"time"
 
 	"github.com/saichler/l8services/go/services/dcache"
 	"github.com/saichler/l8srlz/go/serialize/object"
@@ -12,6 +13,7 @@ import (
 	"github.com/saichler/l8utils/go/utils/web"
 	"github.com/saichler/reflect/go/reflect/introspecting"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/antropic"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/common"
 	"github.com/saichler/vibe.with.layer8/go/types"
 	"google.golang.org/protobuf/proto"
 )
@@ -73,6 +75,12 @@ func (this *ProjectService) load(resources ifs.IResources) []interface{} {
 				resources.Logger().Info("Loaded project " + proj.Name)
 			}
 		}
+	}
+	if common.WebServer != nil {
+		go func() {
+			time.Sleep(time.Second * 10)
+			common.WebServer.LoadWebUI()
+		}()
 	}
 	return result
 }

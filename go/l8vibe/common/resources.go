@@ -11,6 +11,7 @@ import (
 	"github.com/saichler/l8utils/go/utils/logger"
 	"github.com/saichler/l8utils/go/utils/registry"
 	"github.com/saichler/l8utils/go/utils/resources"
+	"github.com/saichler/l8web/go/web/server"
 	"github.com/saichler/reflect/go/reflect/introspecting"
 )
 
@@ -48,3 +49,5 @@ func WaitForSignal(resources ifs.IResources) {
 	sig := <-sigs
 	resources.Logger().Info("End signal received! ", sig)
 }
+
+var WebServer *server.RestServer

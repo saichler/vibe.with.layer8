@@ -60,7 +60,9 @@ func startWebServer(resources ifs.IResources) {
 	nic.Resources().Logger().Info("Web Server Started!")
 	resources.Logger().SetLogLevel(ifs.Error_Level)
 
+	common.WebServer = svr.(*server.RestServer)
 	svr.Start()
+
 }
 
 func registerTypes(resources ifs.IResources) {
