@@ -76,12 +76,13 @@ func (this *ProjectService) load(resources ifs.IResources) []interface{} {
 			}
 		}
 	}
-	if common.WebServer != nil {
-		go func() {
+	go func() {
+		if common.WebServer != nil {
 			time.Sleep(time.Second * 10)
 			common.WebServer.LoadWebUI()
-		}()
-	}
+		}
+	}()
+
 	return result
 }
 
