@@ -10,6 +10,7 @@ import (
 	types2 "github.com/saichler/l8types/go/types"
 	"github.com/saichler/l8utils/go/utils/strings"
 	"github.com/saichler/l8utils/go/utils/web"
+	"github.com/saichler/reflect/go/reflect/introspecting"
 	"github.com/saichler/vibe.with.layer8/go/types"
 	"google.golang.org/protobuf/proto"
 )
@@ -30,17 +31,20 @@ func (this *ProjectService) Activate(serviceName string, serviceArea byte, resou
 	resources.Registry().Register(&types.Project{})
 	resources.Registry().Register(&types.ProjectList{})
 	resources.Registry().Register(&types2.Query{})
-	resources.Introspector().Inspect(&types.Project{})
-	this.cache = dcache.NewDistributedCache(ServiceName, ServiceArea, "Project", resources.SysConfig().LocalUuid, listener, resources)
-	this.load(resources)
+	node, _ := resources.Introspector().Inspect(&types.Project{})
+	introspecting.AddPrimaryKeyDecorator(node, "User", "Name")
+	initData := this.load(resources)
+	this.cache = dcache.NewDistributedCache(ServiceName, ServiceArea, &types.Project{}, initData,
+		listener, resources)
 	return nil
 }
 
-func (this *ProjectService) load(resources ifs.IResources) {
+func (this *ProjectService) load(resources ifs.IResources) []interface{} {
+	result := make([]interface{}, 0)
 	users, err := os.ReadDir("/data")
 	if err != nil {
 		resources.Logger().Error("Failed to load users")
-		return
+		return result
 	}
 	for _, user := range users {
 		projects, err := os.ReadDir("/data/" + user.Name())
@@ -61,13 +65,15 @@ func (this *ProjectService) load(resources ifs.IResources) {
 					resources.Logger().Error("#2 Failed to load project " + project.Name())
 					continue
 				}
-				key := strings.New(proj.User, proj.Name).String()
+
 				resources.Logger().Info("Loaded project "+proj.Name+" with ", len(proj.Messages))
-				this.cache.Put(key, proj, true)
+				result = append(result, proj)
+
 				resources.Logger().Info("Loaded project " + proj.Name)
 			}
 		}
 	}
+	return result
 }
 
 // DeActivate deactivates the ProjectService
@@ -79,8 +85,7 @@ func (this *ProjectService) DeActivate() error {
 func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
 	project, ok := elements.Element().(*types.Project)
 	if ok {
-		key := strings.New(project.User, project.Name).String()
-		this.cache.Post(key, project, elements.Notification())
+		this.cache.Post(project, elements.Notification())
 		pb := saveProject(project)
 		if pb != nil {
 			return pb
@@ -124,8 +129,7 @@ func (this *ProjectService) Get(elements ifs.IElements, vnic ifs.IVNic) ifs.IEle
 	if elements.IsFilterMode() {
 		project, ok := elements.Element().(*types.Project)
 		if ok {
-			key := strings.New(project.User, project.Name).String()
-			elem := this.cache.Get(key)
+			elem, _ := this.cache.Get(project)
 			return object.New(nil, elem)
 		}
 	}
@@ -169,10 +173,10 @@ func (this *ProjectService) WebService() ifs.IWebService {
 }
 
 func (this *ProjectService) appendMessage(p *types.Project) *types.Project {
-	key := strings.New(p.User, p.Name).String()
-	proj := this.cache.Get(key).(*types.Project)
+	prj, _ := this.cache.Get(p)
+	proj := prj.(*types.Project)
 	proj.Messages = append(proj.Messages, p.Messages[len(p.Messages)-1])
-	this.cache.Put(key, proj)
+	this.cache.Put(proj, true)
 	saveProject(proj)
 	return proj
 }
