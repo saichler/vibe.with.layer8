@@ -100,6 +100,9 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 	project, ok := elements.Element().(*types.Project)
 	if ok {
 		this.cache.Post(project, elements.Notification())
+		antropic.ParseMessages(project)
+		saveProject(project)
+		common.WebServer.LoadWebUI()
 		pb := saveProject(project)
 		if pb != nil {
 			return pb
@@ -110,7 +113,18 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 
 // Put handles PUT requests
 func (this *ProjectService) Put(elements ifs.IElements, vnic ifs.IVNic) ifs.IElements {
-	return nil
+	project, ok := elements.Element().(*types.Project)
+	if ok {
+		this.cache.Put(project, elements.Notification())
+		antropic.ParseMessages(project)
+		saveProject(project)
+		common.WebServer.LoadWebUI()
+		pb := saveProject(project)
+		if pb != nil {
+			return pb
+		}
+	}
+	return object.New(nil, project)
 }
 
 // Patch handles PATCH requests
