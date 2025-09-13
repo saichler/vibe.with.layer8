@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"os"
 	strings2 "strings"
 	"time"
@@ -77,8 +78,9 @@ func (this *ProjectService) load(resources ifs.IResources) []interface{} {
 		}
 	}
 	go func() {
+		time.Sleep(time.Second * 10)
 		if common.WebServer != nil {
-			time.Sleep(time.Second * 10)
+			fmt.Println("Re-loading")
 			common.WebServer.LoadWebUI()
 		}
 	}()
