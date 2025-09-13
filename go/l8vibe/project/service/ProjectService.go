@@ -34,7 +34,7 @@ func (this *ProjectService) Activate(serviceName string, serviceArea byte, resou
 	node, _ := resources.Introspector().Inspect(&types.Project{})
 	introspecting.AddPrimaryKeyDecorator(node, "User", "Name")
 	initData := this.load(resources)
-	this.cache = dcache.NewDistributedCache(ServiceName, ServiceArea, &types.Project{}, initData,
+	this.cache = dcache.NewDistributedCacheNoSync(ServiceName, ServiceArea, &types.Project{}, initData,
 		listener, resources)
 	return nil
 }
