@@ -200,6 +200,7 @@ func (this *ProjectService) GetQuery(query ifs.IQuery) []interface{} {
 			result = append(result, elem)
 			proj, ok := elem.(*types.Project)
 			if ok {
+				fmt.Println("Parsing messages for ", proj.Name, " ", len(proj.Messages))
 				antropic.ParseMessages(proj)
 			}
 		}
