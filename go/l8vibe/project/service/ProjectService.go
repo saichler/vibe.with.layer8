@@ -198,9 +198,14 @@ func (this *ProjectService) GetQuery(query ifs.IQuery) []interface{} {
 		match := query.Match(elem)
 		if match {
 			result = append(result, elem)
+			proj, ok := elem.(*types.Project)
+			if ok {
+				antropic.ParseMessages(proj)
+			}
 		}
 		return match, elem
 	})
+	common.WebServer.LoadWebUI()
 	return result
 }
 
