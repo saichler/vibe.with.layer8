@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/saichler/l8services/go/services/dcache"
 	"github.com/saichler/l8services/go/services/manager"
 	"github.com/saichler/l8srlz/go/serialize/object"
 	"github.com/saichler/l8types/go/ifs"
@@ -153,6 +154,52 @@ func TestSimulator(t *testing.T) {
 	if err != nil {
 		t.Fail()
 		fmt.Println(err)
+		return
+	}
+}
+
+type cacheListen struct {
+}
+
+func (this *cacheListen) PropertyChangeNotification(set *types2.NotificationSet) {
+
+}
+
+func TestProjectMessageUpdate(t *testing.T) {
+	res := Resources("test", 22222)
+	node, _ := res.Introspector().Inspect(&types.Project{})
+	introspecting.AddPrimaryKeyDecorator(node, "User", "Name")
+
+	cache := dcache.NewDistributedCacheNoSync("Test", 0, &types.Project{}, nil,
+		&cacheListen{}, res)
+	project := &types.Project{User: "Test", Name: "Test"}
+	cache.Post(project)
+	project.Messages = make([]*types.Message, 2)
+	project.Messages[0] = &types.Message{Role: "user", Content: "Hello World 1"}
+	project.Messages[1] = &types.Message{Role: "user", Content: "Hello World 2"}
+	notif, err := cache.Put(project)
+	if err != nil {
+		t.Fail()
+		fmt.Println(err)
+		return
+	}
+	if notif == nil {
+		t.Fail()
+		fmt.Println("No notification #1")
+		return
+	}
+	project.Messages = append(project.Messages, &types.Message{Role: "user", Content: "Hello World 3"})
+	project.Messages = append(project.Messages, &types.Message{Role: "user", Content: "Hello World 4"})
+
+	notif, err = cache.Put(project)
+	if err != nil {
+		t.Fail()
+		fmt.Println(err)
+		return
+	}
+	if notif == nil {
+		t.Fail()
+		fmt.Println("No notification #2")
 		return
 	}
 }
