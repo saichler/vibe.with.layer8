@@ -105,7 +105,14 @@ class ChatManager {
                 const assistantMessage = project.messages.find(msg => msg.role === 'assistant');
                 console.log('Assistant message found:', assistantMessage);
                 if (assistantMessage && assistantMessage.content) {
-                    this.addMessage(assistantMessage.content, 'ai');
+                    // Show only the last line of the assistant response
+                    const content = assistantMessage.content || '';
+                    const lines = content.split('\n').filter(line => line.trim());
+                    const lastLine = lines.length > 0 ? lines[lines.length - 1] : content;
+                    this.addMessage(lastLine, 'ai');
+                    
+                    // Refresh the workspace preview to show any changes
+                    this.refreshWorkspacePreview();
                 } else {
                     console.log('No assistant message with content found');
                     this.addMessage("I'm here to help you create amazing web applications. What would you like to build?", 'ai');
@@ -442,6 +449,17 @@ class ChatManager {
         if (this.currentProject && this.currentProject.user && this.currentProject.name) {
             const storageKey = `l8vibe_chat_${this.currentProject.user}_${this.currentProject.name}`;
             localStorage.removeItem(storageKey);
+        }
+    }
+
+    // Refresh the workspace preview to show any file changes
+    refreshWorkspacePreview() {
+        if (window.workspace && this.currentProject) {
+            // Force refresh the preview by updating it with the current project path
+            if (this.currentProject.user && this.currentProject.name) {
+                const dynamicPath = `./workspace/${this.currentProject.user}/${this.currentProject.name}/index.html`;
+                workspace.updatePreviewWithPath(dynamicPath);
+            }
         }
     }
 }
