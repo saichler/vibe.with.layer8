@@ -157,6 +157,12 @@ class WorkspaceManager {
             this.currentProject = createdProject;
             this.storeCurrentProject();
 
+            // Clear any existing chat cache for this project name/user combination
+            if (createdProject.user && createdProject.name) {
+                const storageKey = `l8vibe_chat_${createdProject.user}_${createdProject.name}`;
+                localStorage.removeItem(storageKey);
+            }
+
             // Initialize chat for this project
             if (window.chat) {
                 chat.setCurrentProject(createdProject);
@@ -305,13 +311,44 @@ class WorkspaceManager {
     }
 
     // Update preview with project path
-    updatePreviewWithPath(path) {
+    async updatePreviewWithPath(path) {
         const previewFrame = document.getElementById('previewFrame');
         
         if (previewFrame) {
-            // Load the actual webpage at the path
-            previewFrame.src = path;
-            this.hideEmptyState();
+            try {
+                // First, check if the file exists by making a HEAD request
+                const response = await fetch(path, { method: 'HEAD' });
+                
+                if (!response.ok) {
+                    console.log(`Preview path returned ${response.status}, showing empty state`);
+                    this.showEmptyState();
+                    return;
+                }
+                
+                // File exists, load it in the iframe
+                const handleLoadError = () => {
+                    console.log('Preview failed to load, showing empty state');
+                    this.showEmptyState();
+                    previewFrame.removeEventListener('error', handleLoadError);
+                };
+                
+                const handleLoadSuccess = () => {
+                    previewFrame.removeEventListener('error', handleLoadError);
+                    previewFrame.removeEventListener('load', handleLoadSuccess);
+                };
+                
+                // Add event listeners for load success and error
+                previewFrame.addEventListener('error', handleLoadError);
+                previewFrame.addEventListener('load', handleLoadSuccess);
+                
+                // Load the actual webpage at the path
+                previewFrame.src = path;
+                this.hideEmptyState();
+                
+            } catch (error) {
+                console.log('Error checking preview path, showing empty state:', error);
+                this.showEmptyState();
+            }
         }
     }
 

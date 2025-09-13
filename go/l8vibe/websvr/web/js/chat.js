@@ -402,6 +402,9 @@ class ChatManager {
     setCurrentProject(project) {
         this.currentProject = project;
         
+        // Clear any existing chat history from localStorage for new project
+        this.clearChat();
+        
         // Check if project has meaningful messages to load into chat session
         if (project && project.messages && project.messages.length > 0) {
             // Check if messages are meaningful (not just placeholder/empty messages)

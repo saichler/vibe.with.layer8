@@ -188,7 +188,13 @@ class AuthManager {
 
     // Check for stored authentication
     checkStoredAuth() {
-        console.log('checkStoredAuth called');
+        console.log('checkStoredAuth called - always starting signed out');
+        
+        // Always clear any stored authentication and start in signed-out state
+        localStorage.removeItem('l8vibe_auth');
+        this.currentUser = null;
+        this.isAuthenticated = false;
+        
         // Skip localStorage operations for file:// protocol
         if (window.location.protocol === 'file:') {
             console.warn('localStorage not available with file:// protocol');
@@ -196,52 +202,9 @@ class AuthManager {
             return;
         }
         
-        try {
-            const stored = localStorage.getItem('l8vibe_auth');
-            if (stored) {
-                const authData = JSON.parse(stored);
-                const hoursSinceLogin = (Date.now() - authData.timestamp) / (1000 * 60 * 60);
-                
-                // Auto-logout after 24 hours
-                if (hoursSinceLogin < 24 && authData.authenticated) {
-                    this.currentUser = authData.user;
-                    this.isAuthenticated = true;
-                    
-                    // Enable Create Project button
-                    this.enableCreateProjectButton();
-                    
-                    // Enable Projects menu
-                    this.enableProjectsMenu();
-                    
-                    // Load user projects immediately after restoring auth
-                    this.loadUserProjectsAfterLogin();
-                    
-                    // Update Sign In button to Sign Out
-                    this.updateSignInButton();
-                    
-                    // Navigate to appropriate screen based on stored project
-                    const storedProject = localStorage.getItem('l8vibe_current_project');
-                    console.log('Stored project:', storedProject);
-                    if (storedProject) {
-                        console.log('Navigating to workspace screen');
-                        app.showScreen('workspaceScreen');
-                    } else {
-                        console.log('Navigating to marketing screen');
-                        app.showScreen('marketingScreen');
-                    }
-                    console.log('checkStoredAuth complete - authenticated path');
-                    return;
-                }
-            }
-        } catch (error) {
-            console.error('Error checking stored auth:', error);
-        }
-        
-        // Default to marketing screen
-        console.log('Defaulting to marketing screen');
-        this.clearStoredAuth();
+        // Always show marketing screen (signed-out state)
         app.showScreen('marketingScreen');
-        console.log('checkStoredAuth complete');
+        console.log('checkStoredAuth complete - always signed out');
     }
 
     // Clear stored authentication
