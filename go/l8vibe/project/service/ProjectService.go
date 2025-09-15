@@ -27,8 +27,9 @@ const (
 
 // ProjectService implements ifs.IServiceHandler interface
 type ProjectService struct {
-	cache     ifs.IDistributedCache
-	simulator *AntropicSimulator
+	cache ifs.IDistributedCache
+	//simulator *AntropicSimulator
+	anthropicClinet *antropic.AnthropicClient
 }
 
 // Activate activates the ProjectService
@@ -41,7 +42,8 @@ func (this *ProjectService) Activate(serviceName string, serviceArea byte, resou
 	initData := this.load(resources)
 	this.cache = dcache.NewDistributedCacheNoSync(ServiceName, ServiceArea, &types.Project{}, initData,
 		listener, resources)
-	this.simulator = NewAnthropicSimulator()
+	this.anthropicClinet = antropic.NewAnthropicClient()
+	//this.simulator = NewAnthropicSimulator()
 	return nil
 }
 
@@ -152,7 +154,8 @@ func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IE
 	}
 	current, _ := this.cache.Get(project)
 	currentProj := current.(*types.Project)
-	err := this.simulator.Do(project.Messages[0].Content, currentProj)
+	err := this.anthropicClinet.Do(project.Messages[0].Content, currentProj)
+	//err := this.simulator.Do(project.Messages[0].Content, currentProj)
 	if err == nil {
 		numMsg := 0
 		if project.Messages != nil {
