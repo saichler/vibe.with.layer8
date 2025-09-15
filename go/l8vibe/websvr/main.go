@@ -61,6 +61,8 @@ func startWebServer(resources ifs.IResources) {
 	resources.Logger().SetLogLevel(ifs.Error_Level)
 
 	common.WebServer = svr.(*server.RestServer)
+	server.Timeout = 600
+	
 	svr.Start()
 
 }
