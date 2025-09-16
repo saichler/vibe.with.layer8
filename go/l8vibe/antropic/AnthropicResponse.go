@@ -37,12 +37,33 @@ func ParseAndCreateFiles(resposeFilename string) ([]string, error) {
 }
 
 func ParseMessages(project *types.Project) error {
-	for _, message := range project.Messages {
+	for i, message := range project.Messages {
 		if message.Role == "assistant" {
+			fmt.Println("Parsing message #", i)
+
+			// Check script.js before processing this message
+			scriptPath := filepath.Join(".", "web", "workspace", project.User, project.Name, "script.js")
+			if data, err := os.ReadFile(scriptPath); err == nil {
+				lines := len(strings.Split(string(data), "\n"))
+				fmt.Printf("  Before message %d: script.js has %d lines\n", i, lines)
+			} else {
+				fmt.Printf("  Before message %d: script.js does not exist\n", i)
+			}
 
 			_, err := ParseMessage(message.Content, project)
 			if err != nil {
 				return err
+			}
+
+			// Check script.js after processing this message
+			if data, err := os.ReadFile(scriptPath); err == nil {
+				lines := len(strings.Split(string(data), "\n"))
+				fmt.Printf("  After message %d: script.js has %d lines\n", i, lines)
+				if lines < 100 { // If it's corrupted, show the content
+					fmt.Printf("  CORRUPTED script.js content: %.200s...\n", string(data))
+				}
+			} else {
+				fmt.Printf("  After message %d: script.js does not exist\n", i)
 			}
 		}
 	}
@@ -51,6 +72,29 @@ func ParseMessages(project *types.Project) error {
 
 func ParseMessage(text string, project *types.Project) ([]string, error) {
 	var result []string
+
+	// Debug: check for script.js mentions in message
+	if strings.Contains(text, "script.js") {
+		fmt.Printf("DEBUG: Message contains script.js, analyzing...\n")
+		scriptPositions := []int{}
+		for i := 0; i < len(text)-8; i++ { // len("script.js") = 9
+			if strings.HasPrefix(text[i:], "script.js") {
+				scriptPositions = append(scriptPositions, i)
+			}
+		}
+		for idx, pos := range scriptPositions {
+			start := pos - 100
+			if start < 0 {
+				start = 0
+			}
+			end := pos + 200
+			if end > len(text) {
+				end = len(text)
+			}
+			fmt.Printf("script.js mention #%d at position %d:\n", idx+1, pos)
+			fmt.Printf("Context: %s\n---\n", text[start:end])
+		}
+	}
 
 	// Regular expression to match code blocks with file names
 	// Matches: ## filename.ext followed by ```language and content until ```
@@ -61,15 +105,21 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 	matches := codeBlockPattern.FindAllStringSubmatch(text, -1)
 
+	fmt.Printf("DEBUG: Primary pattern found %d matches\n", len(matches))
 	if len(matches) == 0 {
 		// Try alternative pattern that matches **filename** or Updated filename formats
 		altPattern := regexp.MustCompile(`(?s)\*\*(Updated\s+)?([\w\-./]+\.\w+)\*\*.*?\n` + "```" + `(\w+)?\s*\n(.*?)\n` + "```")
 		altMatches := altPattern.FindAllStringSubmatch(text, -1)
+		fmt.Printf("DEBUG: Alternative pattern found %d matches\n", len(altMatches))
 
 		// Process matches with the **Updated filename** pattern
 		for _, match := range altMatches {
 			filename := strings.TrimSpace(match[2])
 			content := match[4]
+			// Debug: track which pattern creates script.js
+			if filename == "script.js" {
+				fmt.Printf("DEBUG: Alternative pattern creating script.js\n")
+			}
 			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 			}
@@ -82,6 +132,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 			// Matches file structure comments followed by code blocks - but be more restrictive
 			altPattern2 := regexp.MustCompile(`(?s)([\w\-./]+\.[\w]+)\s*\n` + "```" + `(\w+)?\s*\n(.*?)\n` + "```")
 			altMatches2 := altPattern2.FindAllStringSubmatch(text, -1)
+			fmt.Printf("DEBUG: Third pattern found %d matches\n", len(altMatches2))
 
 			// Filter matches that look like file names (have extensions and no spaces)
 			for _, match := range altMatches2 {
@@ -91,6 +142,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				// Only process if it looks like a valid filename
 				if strings.Contains(filename, ".") && !strings.Contains(filename, " ") && !strings.Contains(filename, "#") && len(filename) < 50 {
 					content := match[3]
+					// Debug: track which pattern creates script.js
+					if filename == "script.js" {
+						fmt.Printf("DEBUG: Third pattern creating script.js\n")
+					}
 					if err := createFileWithPath(filename, content, project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 					}
@@ -105,6 +160,26 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 			filename := match[1]
 			content := match[3]
 			fullMatch := match[0]
+
+			// Debug: show what the primary pattern matched for script.js
+			if filename == "script.js" {
+				fmt.Printf("DEBUG: Primary pattern matched script.js\n")
+				fmt.Printf("  Full match preview: %.200s...\n", fullMatch)
+				fmt.Printf("  Content preview: %.100s...\n", content)
+				fmt.Printf("  Content length: %d\n", len(content))
+
+				// Check if loadSampleData is being called
+				if strings.Contains(content, "loadSampleData()") {
+					fmt.Printf("  ✅ loadSampleData() call found\n")
+				} else {
+					fmt.Printf("  ❌ loadSampleData() call missing\n")
+					fmt.Printf("  Has DOMContentLoaded: %v\n", strings.Contains(content, "DOMContentLoaded"))
+					fmt.Printf("  Content length: %d (should skip if > 100)\n", len(content))
+					if strings.Contains(content, "DOMContentLoaded") {
+						fmt.Printf("  This should be skipped!\n")
+					}
+				}
+			}
 
 			// Skip "Add to" patterns which should be treated as partial updates
 			if strings.Contains(fullMatch, "Add to") {
@@ -123,6 +198,19 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 			    strings.Contains(content, "## Option")) {
 				continue
 			}
+
+			// Skip malformed matches where JavaScript files contain only function calls
+			if strings.HasSuffix(filename, ".js") && len(strings.TrimSpace(content)) < 50 {
+				fmt.Printf("DEBUG: Skipping malformed JavaScript match (too short): %s\n", content)
+				continue
+			}
+
+			// Skip script.js matches that don't contain essential initialization code
+			if filename == "script.js" && !strings.Contains(content, "loadSampleData()") && len(content) > 100 {
+				fmt.Printf("DEBUG: Skipping script.js match missing loadSampleData() call (length: %d)\n", len(content))
+				continue
+			}
+
 			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 			}
@@ -139,7 +227,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 		var content strings.Builder
 		inCodeBlock := false
 
-		for _, line := range lines {
+		for i, line := range lines {
 			trimmedLine := strings.TrimSpace(line)
 
 			// Check if this line looks like a filename (be very restrictive)
@@ -147,11 +235,20 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				!strings.Contains(trimmedLine, " ") &&
 				!strings.Contains(trimmedLine, ":") &&
 				!strings.Contains(trimmedLine, "#") &&
+				!strings.Contains(trimmedLine, "*") &&  // Exclude markdown formatting
+				!strings.Contains(trimmedLine, "**") && // Exclude markdown bold
+				!strings.Contains(trimmedLine, "Replace") && // Exclude instruction text
+				!strings.Contains(trimmedLine, "your") &&    // Exclude instruction text
 				len(strings.Split(trimmedLine, ".")) == 2 &&
 				len(trimmedLine) >= 3 && len(trimmedLine) < 50 {
 
+				fmt.Printf("DEBUG: Line %d matched as filename: '%s'\n", i+1, trimmedLine)
 					// Save previous file if exists
 				if currentFile != "" && content.Len() > 0 {
+					// Debug: track which pattern creates script.js
+					if currentFile == "script.js" {
+						fmt.Printf("DEBUG: Fourth pattern creating script.js (mid-loop)\n")
+					}
 					if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 					}
@@ -179,6 +276,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 		// Save the last file
 		if currentFile != "" && content.Len() > 0 {
+			// Debug: track which pattern creates script.js
+			if currentFile == "script.js" {
+				fmt.Printf("DEBUG: Fourth pattern creating script.js (final)\n")
+			}
 			if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 			}
@@ -191,6 +292,11 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 }
 
 func createFileWithPath(filename, content string, project *types.Project) error {
+	if filename == "script.js" {
+		fmt.Printf("DEBUG: createFileWithPath called for script.js\n")
+		fmt.Printf("  Content preview: %.100s...\n", content)
+		fmt.Printf("  Content lines: %d\n", len(strings.Split(content, "\n")))
+	}
 
 	// Construct the path: ./web/workspace/{user}/{project_name}/{filename}
 	basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
@@ -205,10 +311,16 @@ func createFileWithPath(filename, content string, project *types.Project) error 
 	// Check if file already exists
 	if _, err := os.Stat(fullPath); err == nil {
 		// File exists - handle update
+		if filename == "script.js" {
+			fmt.Printf("DEBUG: script.js exists, calling updateFileWithPath\n")
+		}
 		return updateFileWithPath(fullPath, content, filename)
 	}
 
 	// File doesn't exist - create new file
+	if filename == "script.js" {
+		fmt.Printf("DEBUG: Creating new script.js file\n")
+	}
 	return os.WriteFile(fullPath, []byte(content), 0644)
 }
 
