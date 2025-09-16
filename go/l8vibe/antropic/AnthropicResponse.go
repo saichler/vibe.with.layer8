@@ -71,7 +71,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 			}
-			basePath := filepath.Join("..", "web", "workspace", project.User, project.Name)
+			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 			result = append(result, fmt.Sprintf("Updated file: %s", filepath.Join(basePath, filename)))
 		}
 
@@ -91,7 +91,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 					if err := createFileWithPath(filename, content, project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 					}
-					basePath := filepath.Join("..", "web", "workspace", project.User, project.Name)
+					basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 					result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, filename)))
 				}
 			}
@@ -105,7 +105,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 			}
-			basePath := filepath.Join("..", "web", "workspace", project.User, project.Name)
+			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 			result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, filename)))
 		}
 	}
@@ -130,7 +130,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 					if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 					}
-					basePath := filepath.Join("..", "web", "workspace", project.User, project.Name)
+					basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 					result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, currentFile)))
 				}
 				// Clean filename by removing markdown formatting (asterisks, etc.)
@@ -157,7 +157,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 			if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 			}
-			basePath := filepath.Join("..", "web", "workspace", project.User, project.Name)
+			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 			result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, currentFile)))
 		}
 	}
@@ -166,9 +166,8 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 }
 
 func createFileWithPath(filename, content string, project *types.Project) error {
-	// Construct the path: ../web/workspace/{user}/{project_name}/{filename}
-	// Use ../ to go up from tests directory to go directory
-	basePath := filepath.Join("..", "web", "workspace", project.User, project.Name)
+	// Construct the path: ./web/workspace/{user}/{project_name}/{filename}
+	basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 	fullPath := filepath.Join(basePath, filename)
 
 	// Create directory if it doesn't exist
