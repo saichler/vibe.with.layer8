@@ -211,7 +211,19 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				continue
 			}
 
-			if err := createFileWithPath(filename, content, project); err != nil {
+			// Check if this is a replacement operation
+			isReplacement := strings.Contains(fullMatch, "Replace your entire") ||
+							strings.Contains(fullMatch, "replace your entire") ||
+							strings.Contains(fullMatch, "Replace the entire") ||
+							strings.Contains(fullMatch, "replace the entire") ||
+							strings.Contains(fullMatch, "Replace your") ||
+							strings.Contains(fullMatch, "replace your")
+
+			if isReplacement && filename == "script.js" {
+				fmt.Printf("DEBUG: Detected replacement pattern for script.js\n")
+			}
+
+			if err := createFileWithPath(filename, content, project, isReplacement); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 			}
 			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
@@ -291,7 +303,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 	return result, nil
 }
 
-func createFileWithPath(filename, content string, project *types.Project) error {
+func createFileWithPath(filename, content string, project *types.Project, forceReplace ...bool) error {
 	if filename == "script.js" {
 		fmt.Printf("DEBUG: createFileWithPath called for script.js\n")
 		fmt.Printf("  Content preview: %.100s...\n", content)
@@ -308,13 +320,25 @@ func createFileWithPath(filename, content string, project *types.Project) error 
 		return err
 	}
 
+	// Check if this is a forced replacement
+	shouldReplace := len(forceReplace) > 0 && forceReplace[0]
+
 	// Check if file already exists
 	if _, err := os.Stat(fullPath); err == nil {
-		// File exists - handle update
-		if filename == "script.js" {
-			fmt.Printf("DEBUG: script.js exists, calling updateFileWithPath\n")
+		// File exists
+		if shouldReplace {
+			// Force complete replacement
+			if filename == "script.js" {
+				fmt.Printf("DEBUG: script.js exists, forcing complete replacement\n")
+			}
+			return os.WriteFile(fullPath, []byte(content), 0644)
+		} else {
+			// Handle partial update
+			if filename == "script.js" {
+				fmt.Printf("DEBUG: script.js exists, calling updateFileWithPath\n")
+			}
+			return updateFileWithPath(fullPath, content, filename)
 		}
-		return updateFileWithPath(fullPath, content, filename)
 	}
 
 	// File doesn't exist - create new file
