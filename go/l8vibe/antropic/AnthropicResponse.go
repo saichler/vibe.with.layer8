@@ -37,9 +37,9 @@ func ParseAndCreateFiles(resposeFilename string) ([]string, error) {
 }
 
 func ParseMessages(project *types.Project) error {
-	for i, message := range project.Messages {
+	for _, message := range project.Messages {
 		if message.Role == "assistant" {
-			fmt.Println("Parsing message #", i)
+
 			_, err := ParseMessage(message.Content, project)
 			if err != nil {
 				return err
@@ -91,10 +91,6 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				// Only process if it looks like a valid filename
 				if strings.Contains(filename, ".") && !strings.Contains(filename, " ") && !strings.Contains(filename, "#") && len(filename) < 50 {
 					content := match[3]
-					// Debug logging
-					if filename == "script.js" {
-						fmt.Printf("DEBUG: Third pattern creating script.js with content: %.100s\n", content)
-					}
 					if err := createFileWithPath(filename, content, project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 					}
@@ -115,6 +111,18 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				continue
 			}
 
+			// Skip malformed matches where script.js contains instruction text instead of code
+			if filename == "script.js" && strings.Contains(content, "Browser Console Command") {
+				continue
+			}
+
+			// Skip matches where JavaScript files don't contain actual JavaScript
+			if strings.HasSuffix(filename, ".js") &&
+			   (strings.Contains(content, "Press F12") ||
+			    strings.Contains(content, "Developer Tools") ||
+			    strings.Contains(content, "## Option")) {
+				continue
+			}
 			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 			}
@@ -141,12 +149,9 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				!strings.Contains(trimmedLine, "#") &&
 				len(strings.Split(trimmedLine, ".")) == 2 &&
 				len(trimmedLine) >= 3 && len(trimmedLine) < 50 {
-				// Save previous file if exists
+
+					// Save previous file if exists
 				if currentFile != "" && content.Len() > 0 {
-					// Debug logging
-					if currentFile == "script.js" {
-						fmt.Printf("DEBUG: Fourth pattern creating script.js with content: %.100s\n", content.String())
-					}
 					if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 					}
@@ -174,10 +179,6 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 		// Save the last file
 		if currentFile != "" && content.Len() > 0 {
-			// Debug logging
-			if currentFile == "script.js" {
-				fmt.Printf("DEBUG: Fourth pattern final creating script.js with content: %.100s\n", content.String())
-			}
 			if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 			}
@@ -190,6 +191,7 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 }
 
 func createFileWithPath(filename, content string, project *types.Project) error {
+
 	// Construct the path: ./web/workspace/{user}/{project_name}/{filename}
 	basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
 	fullPath := filepath.Join(basePath, filename)
