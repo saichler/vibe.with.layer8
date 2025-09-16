@@ -79,17 +79,22 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 		if len(altMatches) == 0 {
 			// Try third pattern that matches the actual format in the sample
-			// Matches file structure comments followed by code blocks
-			altPattern2 := regexp.MustCompile(`(?s)([\w\-./]+)\s*\n` + "```" + `(\w+)?\s*\n(.*?)\n` + "```")
+			// Matches file structure comments followed by code blocks - but be more restrictive
+			altPattern2 := regexp.MustCompile(`(?s)([\w\-./]+\.[\w]+)\s*\n` + "```" + `(\w+)?\s*\n(.*?)\n` + "```")
 			altMatches2 := altPattern2.FindAllStringSubmatch(text, -1)
 
-			// Filter matches that look like file names (have extensions)
+			// Filter matches that look like file names (have extensions and no spaces)
 			for _, match := range altMatches2 {
 				filename := strings.TrimSpace(match[1])
 				// Clean filename by removing markdown formatting (asterisks, etc.)
 				filename = strings.Trim(filename, "*")
-				if strings.Contains(filename, ".") && !strings.Contains(filename, " ") {
+				// Only process if it looks like a valid filename
+				if strings.Contains(filename, ".") && !strings.Contains(filename, " ") && !strings.Contains(filename, "#") && len(filename) < 50 {
 					content := match[3]
+					// Debug logging
+					if filename == "script.js" {
+						fmt.Printf("DEBUG: Third pattern creating script.js with content: %.100s\n", content)
+					}
 					if err := createFileWithPath(filename, content, project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
 					}
@@ -103,6 +108,12 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 		for _, match := range matches {
 			filename := match[1]
 			content := match[3]
+			fullMatch := match[0]
+
+			// Skip "Add to" patterns which should be treated as partial updates
+			if strings.Contains(fullMatch, "Add to") {
+				continue
+			}
 
 			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
@@ -123,12 +134,19 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 		for _, line := range lines {
 			trimmedLine := strings.TrimSpace(line)
 
-			// Check if this line looks like a filename
+			// Check if this line looks like a filename (be very restrictive)
 			if !inCodeBlock && strings.Contains(trimmedLine, ".") &&
 				!strings.Contains(trimmedLine, " ") &&
-				len(strings.Split(trimmedLine, ".")) == 2 {
+				!strings.Contains(trimmedLine, ":") &&
+				!strings.Contains(trimmedLine, "#") &&
+				len(strings.Split(trimmedLine, ".")) == 2 &&
+				len(trimmedLine) >= 3 && len(trimmedLine) < 50 {
 				// Save previous file if exists
 				if currentFile != "" && content.Len() > 0 {
+					// Debug logging
+					if currentFile == "script.js" {
+						fmt.Printf("DEBUG: Fourth pattern creating script.js with content: %.100s\n", content.String())
+					}
 					if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 						return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 					}
@@ -156,6 +174,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 		// Save the last file
 		if currentFile != "" && content.Len() > 0 {
+			// Debug logging
+			if currentFile == "script.js" {
+				fmt.Printf("DEBUG: Fourth pattern final creating script.js with content: %.100s\n", content.String())
+			}
 			if err := createFileWithPath(currentFile, content.String(), project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", currentFile, err)
 			}
@@ -208,14 +230,47 @@ func updateFileWithPath(fullPath, newContent, filename string) error {
 }
 
 func isPartialUpdate(newContent, existingContent, filename string) bool {
+	trimmedNew := strings.TrimSpace(newContent)
+
+	// For HTML files: detect if content is just a partial fragment
+	if strings.HasSuffix(filename, ".html") {
+		// If content starts with just a single tag and doesn't have DOCTYPE, html, head, or body tags, it's likely partial
+		if strings.HasPrefix(trimmedNew, "<nav") || strings.HasPrefix(trimmedNew, "<div") ||
+		   strings.HasPrefix(trimmedNew, "<section") || strings.HasPrefix(trimmedNew, "<header") {
+			// Check if it's missing essential HTML document structure
+			if !strings.Contains(trimmedNew, "<!DOCTYPE") &&
+			   !strings.Contains(trimmedNew, "<html") &&
+			   !strings.Contains(trimmedNew, "<head") &&
+			   !strings.Contains(trimmedNew, "<body") {
+				return true // This is a partial HTML fragment
+			}
+		}
+	}
+
+	// For CSS files: detect if content is just comments or partial rules
+	if strings.HasSuffix(filename, ".css") {
+		// If content is mostly comments or contains "Remove these sections", it's likely instructions, not actual CSS
+		if strings.Contains(trimmedNew, "Remove these sections") ||
+		   strings.Contains(trimmedNew, "/* Remove") ||
+		   (strings.Count(trimmedNew, "/*") > strings.Count(trimmedNew, "{")) {
+			return true // This is CSS instructions/comments, not actual stylesheet
+		}
+
+		// Check if this is a CSS addition (new styles for specific components)
+		if strings.Contains(trimmedNew, "/* Navigation Actions */") ||
+		   strings.Contains(trimmedNew, "/* Add this to") ||
+		   (strings.Contains(trimmedNew, ".") &&
+		    len(strings.Split(trimmedNew, "\n")) < 100 &&
+		    !strings.Contains(trimmedNew, ":root") &&
+		    !strings.Contains(trimmedNew, "* {")) {
+			return true // This is a CSS addition that should be ignored
+		}
+	}
+
 	// Check if it's a JavaScript file with method updates
 	if strings.HasSuffix(filename, ".js") {
-		// Check if the new content is a single function that exists in the original file
-		trimmedNew := strings.TrimSpace(newContent)
-
-		// If it starts with "function" and the function name exists in the existing file, it's likely a function replacement
+		// Check if the new content is a single function that exists in the original file (replacement)
 		if strings.HasPrefix(trimmedNew, "function ") {
-			// Extract function name
 			lines := strings.Split(trimmedNew, "\n")
 			if len(lines) > 0 {
 				firstLine := lines[0]
@@ -227,11 +282,21 @@ func isPartialUpdate(newContent, existingContent, filename string) bool {
 						functionName := strings.TrimSpace(firstLine[start:end])
 						// Check if this function exists in the existing file
 						if strings.Contains(existingContent, "function "+functionName+"(") {
-							return true
+							return true // This is a function replacement
 						}
 					}
 				}
 			}
+		}
+
+		// Check if this is a standalone function that should be added (not replaced)
+		if strings.HasPrefix(trimmedNew, "// Add this function") ||
+		   strings.HasPrefix(trimmedNew, "// Add the following function") ||
+		   (strings.Contains(trimmedNew, "function ") &&
+		    len(strings.Split(trimmedNew, "\n")) < 100 &&
+		    !strings.Contains(trimmedNew, "gymData") &&
+		    !strings.Contains(trimmedNew, "locations:")) {
+			return true // This is a function addition that should be ignored or handled specially
 		}
 
 		// Look for method/function updates with specific indicators
@@ -261,8 +326,44 @@ func isPartialUpdate(newContent, existingContent, filename string) bool {
 }
 
 func applyPartialUpdate(existingContent, newContent, filename string) string {
+	trimmedNew := strings.TrimSpace(newContent)
+
 	if strings.HasSuffix(filename, ".js") {
+		// Check if this is a function addition that should be ignored
+		if strings.HasPrefix(trimmedNew, "// Add this function") ||
+		   strings.HasPrefix(trimmedNew, "// Add the following function") ||
+		   (strings.Contains(trimmedNew, "function ") &&
+		    len(strings.Split(trimmedNew, "\n")) < 100 &&
+		    !strings.Contains(trimmedNew, "gymData") &&
+		    !strings.Contains(trimmedNew, "locations:")) {
+			return existingContent // Keep existing content, ignore function additions
+		}
 		return applyJavaScriptUpdate(existingContent, newContent)
+	}
+
+	// For HTML and CSS partial updates that are just fragments or instructions, keep existing content
+	if strings.HasSuffix(filename, ".html") || strings.HasSuffix(filename, ".css") {
+		trimmedNew := strings.TrimSpace(newContent)
+
+		// If HTML content is just a fragment without document structure, ignore it
+		if strings.HasSuffix(filename, ".html") &&
+		   !strings.Contains(trimmedNew, "<!DOCTYPE") &&
+		   !strings.Contains(trimmedNew, "<html") &&
+		   !strings.Contains(trimmedNew, "<head") &&
+		   !strings.Contains(trimmedNew, "<body") {
+			return existingContent // Keep existing content, ignore fragment
+		}
+
+		// If CSS content is mostly comments, instructions, or partial additions, ignore it
+		if strings.HasSuffix(filename, ".css") &&
+		   (strings.Contains(trimmedNew, "Remove these sections") ||
+		    strings.Contains(trimmedNew, "/* Remove") ||
+		    strings.Contains(trimmedNew, "/* Navigation Actions */") ||
+		    strings.Contains(trimmedNew, "/* Add this to") ||
+		    strings.Count(trimmedNew, "/*") > strings.Count(trimmedNew, "{") ||
+		    (!strings.Contains(trimmedNew, ":root") && !strings.Contains(trimmedNew, "* {") && len(strings.Split(trimmedNew, "\n")) < 100)) {
+			return existingContent // Keep existing content, ignore partial additions/instructions
+		}
 	}
 
 	// For other file types, default to simple replacement
