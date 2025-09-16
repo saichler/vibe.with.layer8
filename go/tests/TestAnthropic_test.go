@@ -125,11 +125,15 @@ func TestAnthropicResponse(t *testing.T) {
 }
 
 func TestAnthropicResponse1(t *testing.T) {
-	data, _ := os.ReadFile("project2.data")
+	data, _ := os.ReadFile("jim.dat")
 	project := &types.Project{}
 	proto.Unmarshal(data, project)
-	os.WriteFile("001.request", []byte(project.Messages[0].Content), 0777)
-	os.WriteFile("001.respond", []byte(project.Messages[1].Content), 0777)
+	err := antropic.ParseMessages(project)
+	if err != nil {
+		t.Fail()
+		fmt.Println(err)
+		return
+	}
 }
 
 func TestSimulator(t *testing.T) {
