@@ -105,11 +105,10 @@ class ChatManager {
                 const assistantMessage = project.messages.find(msg => msg.role === 'assistant');
                 console.log('Assistant message found:', assistantMessage);
                 if (assistantMessage && assistantMessage.content) {
-                    // Show only the last line of the assistant response
+                    // Strip all code blocks and display the remaining content
                     const content = assistantMessage.content || '';
-                    const lines = content.split('\n').filter(line => line.trim());
-                    const lastLine = lines.length > 0 ? lines[lines.length - 1] : content;
-                    this.addMessage(lastLine, 'ai');
+                    const contentWithoutCodeBlocks = this.stripCodeBlocks(content);
+                    this.addMessage(contentWithoutCodeBlocks, 'ai');
                     
                     // Refresh the workspace preview to show any changes
                     this.refreshWorkspacePreview();
@@ -289,6 +288,27 @@ class ChatManager {
         }
     }
 
+    // Strip code blocks from content
+    stripCodeBlocks(content) {
+        if (!content || typeof content !== 'string') {
+            return content || '';
+        }
+
+        // Remove all content between ``` markers (code blocks)
+        const codeBlockRegex = /```[\s\S]*?```/g;
+        let strippedContent = content.replace(codeBlockRegex, '');
+
+        // Clean up extra whitespace and empty lines
+        strippedContent = strippedContent
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0)
+            .join(' ')
+            .trim();
+
+        return strippedContent || 'Response processed successfully.';
+    }
+
     // Format time for display
     formatTime(date) {
         const now = new Date();
@@ -393,11 +413,10 @@ class ChatManager {
                 // Add user message content directly to chat
                 this.addMessage(message.content, 'user');
             } else if (message.role === 'assistant') {
-                // For assistant messages, show only the last line
+                // For assistant messages, strip code blocks and display remaining content
                 const content = message.content || '';
-                const lines = content.split('\n').filter(line => line.trim());
-                const lastLine = lines.length > 0 ? lines[lines.length - 1] : content;
-                this.addMessage(lastLine, 'ai');
+                const contentWithoutCodeBlocks = this.stripCodeBlocks(content);
+                this.addMessage(contentWithoutCodeBlocks, 'ai');
             }
         });
         
