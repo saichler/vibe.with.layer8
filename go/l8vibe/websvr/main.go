@@ -62,9 +62,8 @@ func startWebServer(resources ifs.IResources) {
 
 	common.WebServer = svr.(*server.RestServer)
 	server.Timeout = 600
-
+	
 	svr.Start()
-
 }
 
 func registerTypes(resources ifs.IResources) {
