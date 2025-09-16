@@ -54,8 +54,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 	// Regular expression to match code blocks with file names
 	// Matches: ## filename.ext followed by ```language and content until ```
-	// Updated to handle format like "## 1. HTML Structure (index.html)"
-	codeBlockPattern := regexp.MustCompile(`(?s)##\s+(?:\d+\.\s+)?.*?\(?([\w\-./]+\.\w+)\)?\s*\n` + "```" + `(\w+)?\s*\n(.*?)\n` + "```")
+	// Updated to handle formats like:
+	// "## 1. HTML Structure (index.html)"
+	// "## Updated JavaScript (script.js) - Sample Data Section"
+	codeBlockPattern := regexp.MustCompile(`(?s)##\s+(?:(?:\d+\.\s+)|(?:Updated\s+))?.*?\(?([\w\-./]+\.\w+)\)?.*?\n` + "```" + `(\w+)?\s*\n(.*?)\n` + "```")
 
 	matches := codeBlockPattern.FindAllStringSubmatch(text, -1)
 
@@ -208,11 +210,36 @@ func updateFileWithPath(fullPath, newContent, filename string) error {
 func isPartialUpdate(newContent, existingContent, filename string) bool {
 	// Check if it's a JavaScript file with method updates
 	if strings.HasSuffix(filename, ".js") {
-		// Look for method/function updates
+		// Check if the new content is a single function that exists in the original file
+		trimmedNew := strings.TrimSpace(newContent)
+
+		// If it starts with "function" and the function name exists in the existing file, it's likely a function replacement
+		if strings.HasPrefix(trimmedNew, "function ") {
+			// Extract function name
+			lines := strings.Split(trimmedNew, "\n")
+			if len(lines) > 0 {
+				firstLine := lines[0]
+				if strings.Contains(firstLine, "(") {
+					// Extract function name between "function " and "("
+					start := strings.Index(firstLine, "function ") + 9
+					end := strings.Index(firstLine, "(")
+					if start < end {
+						functionName := strings.TrimSpace(firstLine[start:end])
+						// Check if this function exists in the existing file
+						if strings.Contains(existingContent, "function "+functionName+"(") {
+							return true
+						}
+					}
+				}
+			}
+		}
+
+		// Look for method/function updates with specific indicators
 		if strings.Contains(newContent, "loadSampleData()") &&
 			strings.Contains(newContent, "only showing the modified") {
 			return true
 		}
+
 		// Look for partial function definitions
 		if strings.Contains(newContent, "function ") ||
 			strings.Contains(newContent, "() {") {
