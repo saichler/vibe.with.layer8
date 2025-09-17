@@ -13,7 +13,7 @@ import (
 	"github.com/saichler/l8utils/go/utils/strings"
 	"github.com/saichler/l8utils/go/utils/web"
 	"github.com/saichler/reflect/go/reflect/introspecting"
-	"github.com/saichler/vibe.with.layer8/go/l8vibe/antropic"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/anthropic"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/common"
 	"github.com/saichler/vibe.with.layer8/go/types"
 	"google.golang.org/protobuf/proto"
@@ -29,7 +29,7 @@ const (
 type ProjectService struct {
 	cache ifs.IDistributedCache
 	//simulator *AntropicSimulator
-	anthropicClinet *antropic.AnthropicClient
+	anthropicClinet *anthropic.AnthropicClient
 }
 
 // Activate activates the ProjectService
@@ -42,7 +42,7 @@ func (this *ProjectService) Activate(serviceName string, serviceArea byte, resou
 	initData := this.load(resources)
 	this.cache = dcache.NewDistributedCacheNoSync(ServiceName, ServiceArea, &types.Project{}, initData,
 		listener, resources)
-	this.anthropicClinet = antropic.NewAnthropicClient()
+	this.anthropicClinet = anthropic.NewAnthropicClient()
 	//this.simulator = NewAnthropicSimulator()
 	return nil
 }
@@ -76,7 +76,7 @@ func (this *ProjectService) load(resources ifs.IResources) []interface{} {
 
 				resources.Logger().Info("Loaded project "+proj.Name+" with ", len(proj.Messages))
 				result = append(result, proj)
-				antropic.ParseMessages(proj)
+				anthropic.ParseMessages(proj)
 				resources.Logger().Info("Loaded project " + proj.Name)
 			}
 		}
@@ -108,7 +108,7 @@ func (this *ProjectService) Post(elements ifs.IElements, vnic ifs.IVNic) ifs.IEl
 		}
 		fmt.Println("Post OK ", numMsg)
 		this.cache.Post(project, elements.Notification())
-		antropic.ParseMessages(project)
+		anthropic.ParseMessages(project)
 		saveProject(project)
 		common.WebServer.LoadWebUI()
 		pb := saveProject(project)
@@ -130,7 +130,7 @@ func (this *ProjectService) Put(elements ifs.IElements, vnic ifs.IVNic) ifs.IEle
 		}
 		fmt.Println("Put OK ", numMsg)
 		this.cache.Put(project, elements.Notification())
-		antropic.ParseMessages(project)
+		anthropic.ParseMessages(project)
 		saveProject(project)
 		common.WebServer.LoadWebUI()
 		pb := saveProject(project)
@@ -161,7 +161,7 @@ func (this *ProjectService) Patch(elements ifs.IElements, vnic ifs.IVNic) ifs.IE
 		if project.Messages != nil {
 			numMsg = len(currentProj.Messages)
 		}
-		antropic.ParseMessages(currentProj)
+		anthropic.ParseMessages(currentProj)
 		fmt.Println("Patch put in cache ", numMsg)
 		notif, er := this.cache.Put(currentProj, elements.Notification())
 		if er != nil {
@@ -224,7 +224,7 @@ func (this *ProjectService) GetQuery(query ifs.IQuery) []interface{} {
 			proj, ok := elem.(*types.Project)
 			if ok {
 				fmt.Println("Parsing messages for ", proj.Name, " ", len(proj.Messages))
-				antropic.ParseMessages(proj)
+				anthropic.ParseMessages(proj)
 			}
 		}
 		return match, elem

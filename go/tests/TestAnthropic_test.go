@@ -14,7 +14,7 @@ import (
 	"github.com/saichler/l8utils/go/utils/registry"
 	"github.com/saichler/l8utils/go/utils/resources"
 	"github.com/saichler/reflect/go/reflect/introspecting"
-	"github.com/saichler/vibe.with.layer8/go/l8vibe/antropic"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/anthropic"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/consts"
 	"github.com/saichler/vibe.with.layer8/go/l8vibe/project/service"
 	"github.com/saichler/vibe.with.layer8/go/types"
@@ -83,7 +83,7 @@ func TestGenerateProjectsQuery(t *testing.T) {
 }
 
 func testAnthropic(t *testing.T) {
-	client := antropic.NewAnthropicClient()
+	client := anthropic.NewAnthropicClient()
 	project := &types.Project{}
 	project.User = "saichler@gmail.com"
 	project.Name = "hoa"
@@ -111,7 +111,7 @@ func TestAnthropicResponse(t *testing.T) {
 		data, _ = proto.Marshal(project)
 		os.WriteFile("project2.data", data, 0777)
 	*/
-	lines, err := antropic.ParseAndCreateFiles("project2.data")
+	lines, err := anthropic.ParseAndCreateFiles("project2.data")
 	if err != nil {
 		t.Fail()
 		fmt.Println(err)
@@ -128,7 +128,7 @@ func TestAnthropicResponse1(t *testing.T) {
 	data, _ := os.ReadFile("design.dat")
 	project := &types.Project{}
 	proto.Unmarshal(data, project)
-	err := antropic.ParseMessages(project)
+	err := anthropic.ParseMessages(project)
 	if err != nil {
 		t.Fail()
 		fmt.Println(err)

@@ -1,4 +1,4 @@
-package antropic
+package anthropic
 
 import (
 	"fmt"
@@ -69,6 +69,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 		// Process matches with the **Updated filename** pattern
 		for _, match := range altMatches {
 			filename := strings.TrimSpace(match[2])
+			// Normalize Index.html to index.html
+			if filename == "Index.html" {
+				filename = "index.html"
+			}
 			content := match[4]
 			if err := createFileWithPath(filename, content, project); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
@@ -88,6 +92,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				filename := strings.TrimSpace(match[1])
 				// Clean filename by removing markdown formatting (asterisks, etc.)
 				filename = strings.Trim(filename, "*")
+				// Normalize Index.html to index.html
+				if filename == "Index.html" {
+					filename = "index.html"
+				}
 				// Only process if it looks like a valid filename
 				if strings.Contains(filename, ".") && !strings.Contains(filename, " ") && !strings.Contains(filename, "#") && len(filename) < 50 {
 					content := match[3]
@@ -103,6 +111,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 		// Process the matches found with the primary pattern
 		for _, match := range matches {
 			filename := match[1]
+			// Normalize Index.html to index.html
+			if filename == "Index.html" {
+				filename = "index.html"
+			}
 			content := match[3]
 			fullMatch := match[0]
 
@@ -120,9 +132,9 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 			// Skip malformed matches where files contain instruction text instead of code
 			if strings.Contains(content, "Browser Console Command") ||
-			   strings.Contains(content, "Press F12") ||
-			   strings.Contains(content, "Developer Tools") ||
-			   strings.Contains(content, "## Option") {
+				strings.Contains(content, "Press F12") ||
+				strings.Contains(content, "Developer Tools") ||
+				strings.Contains(content, "## Option") {
 				continue
 			}
 
@@ -133,11 +145,11 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 
 			// Check if this is a replacement operation
 			isReplacement := strings.Contains(fullMatch, "Replace your entire") ||
-							strings.Contains(fullMatch, "replace your entire") ||
-							strings.Contains(fullMatch, "Replace the entire") ||
-							strings.Contains(fullMatch, "replace the entire") ||
-							strings.Contains(fullMatch, "Replace your") ||
-							strings.Contains(fullMatch, "replace your")
+				strings.Contains(fullMatch, "replace your entire") ||
+				strings.Contains(fullMatch, "Replace the entire") ||
+				strings.Contains(fullMatch, "replace the entire") ||
+				strings.Contains(fullMatch, "Replace your") ||
+				strings.Contains(fullMatch, "replace your")
 
 			if err := createFileWithPath(filename, content, project, isReplacement); err != nil {
 				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
@@ -163,10 +175,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				!strings.Contains(trimmedLine, " ") &&
 				!strings.Contains(trimmedLine, ":") &&
 				!strings.Contains(trimmedLine, "#") &&
-				!strings.Contains(trimmedLine, "*") &&  // Exclude markdown formatting
+				!strings.Contains(trimmedLine, "*") && // Exclude markdown formatting
 				!strings.Contains(trimmedLine, "**") && // Exclude markdown bold
 				!strings.Contains(trimmedLine, "Replace") && // Exclude instruction text
-				!strings.Contains(trimmedLine, "your") &&    // Exclude instruction text
+				!strings.Contains(trimmedLine, "your") && // Exclude instruction text
 				len(strings.Split(trimmedLine, ".")) == 2 &&
 				len(trimmedLine) >= 3 && len(trimmedLine) < 50 {
 
@@ -180,6 +192,10 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 				}
 				// Clean filename by removing markdown formatting (asterisks, etc.)
 				cleanedFilename := strings.Trim(trimmedLine, "*")
+				// Normalize Index.html to index.html
+				if cleanedFilename == "Index.html" {
+					cleanedFilename = "index.html"
+				}
 				currentFile = cleanedFilename
 				content.Reset()
 				continue
@@ -267,12 +283,12 @@ func isPartialUpdate(newContent, existingContent, filename string) bool {
 	if strings.HasSuffix(filename, ".html") {
 		// If content starts with just a single tag and doesn't have DOCTYPE, html, head, or body tags, it's likely partial
 		if strings.HasPrefix(trimmedNew, "<nav") || strings.HasPrefix(trimmedNew, "<div") ||
-		   strings.HasPrefix(trimmedNew, "<section") || strings.HasPrefix(trimmedNew, "<header") {
+			strings.HasPrefix(trimmedNew, "<section") || strings.HasPrefix(trimmedNew, "<header") {
 			// Check if it's missing essential HTML document structure
 			if !strings.Contains(trimmedNew, "<!DOCTYPE") &&
-			   !strings.Contains(trimmedNew, "<html") &&
-			   !strings.Contains(trimmedNew, "<head") &&
-			   !strings.Contains(trimmedNew, "<body") {
+				!strings.Contains(trimmedNew, "<html") &&
+				!strings.Contains(trimmedNew, "<head") &&
+				!strings.Contains(trimmedNew, "<body") {
 				return true // This is a partial HTML fragment
 			}
 		}
@@ -282,18 +298,18 @@ func isPartialUpdate(newContent, existingContent, filename string) bool {
 	if strings.HasSuffix(filename, ".css") {
 		// If content is mostly comments or contains "Remove these sections", it's likely instructions, not actual CSS
 		if strings.Contains(trimmedNew, "Remove these sections") ||
-		   strings.Contains(trimmedNew, "/* Remove") ||
-		   (strings.Count(trimmedNew, "/*") > strings.Count(trimmedNew, "{")) {
+			strings.Contains(trimmedNew, "/* Remove") ||
+			(strings.Count(trimmedNew, "/*") > strings.Count(trimmedNew, "{")) {
 			return true // This is CSS instructions/comments, not actual stylesheet
 		}
 
 		// Check if this is a CSS addition (new styles for specific components)
 		if strings.Contains(trimmedNew, "/* Navigation Actions */") ||
-		   strings.Contains(trimmedNew, "/* Add this to") ||
-		   (strings.Contains(trimmedNew, ".") &&
-		    len(strings.Split(trimmedNew, "\n")) < 100 &&
-		    !strings.Contains(trimmedNew, ":root") &&
-		    !strings.Contains(trimmedNew, "* {")) {
+			strings.Contains(trimmedNew, "/* Add this to") ||
+			(strings.Contains(trimmedNew, ".") &&
+				len(strings.Split(trimmedNew, "\n")) < 100 &&
+				!strings.Contains(trimmedNew, ":root") &&
+				!strings.Contains(trimmedNew, "* {")) {
 			return true // This is a CSS addition that should be ignored
 		}
 	}
@@ -322,11 +338,11 @@ func isPartialUpdate(newContent, existingContent, filename string) bool {
 
 		// Check if this is a standalone function that should be added (not replaced)
 		if strings.HasPrefix(trimmedNew, "// Add this function") ||
-		   strings.HasPrefix(trimmedNew, "// Add the following function") ||
-		   (strings.Contains(trimmedNew, "function ") &&
-		    len(strings.Split(trimmedNew, "\n")) < 100 &&
-		    !strings.Contains(trimmedNew, "gymData") &&
-		    !strings.Contains(trimmedNew, "locations:")) {
+			strings.HasPrefix(trimmedNew, "// Add the following function") ||
+			(strings.Contains(trimmedNew, "function ") &&
+				len(strings.Split(trimmedNew, "\n")) < 100 &&
+				!strings.Contains(trimmedNew, "gymData") &&
+				!strings.Contains(trimmedNew, "locations:")) {
 			return true // This is a function addition that should be ignored or handled specially
 		}
 
@@ -362,11 +378,11 @@ func applyPartialUpdate(existingContent, newContent, filename string) string {
 	if strings.HasSuffix(filename, ".js") {
 		// Check if this is a function addition that should be ignored
 		if strings.HasPrefix(trimmedNew, "// Add this function") ||
-		   strings.HasPrefix(trimmedNew, "// Add the following function") ||
-		   (strings.Contains(trimmedNew, "function ") &&
-		    len(strings.Split(trimmedNew, "\n")) < 100 &&
-		    !strings.Contains(trimmedNew, "gymData") &&
-		    !strings.Contains(trimmedNew, "locations:")) {
+			strings.HasPrefix(trimmedNew, "// Add the following function") ||
+			(strings.Contains(trimmedNew, "function ") &&
+				len(strings.Split(trimmedNew, "\n")) < 100 &&
+				!strings.Contains(trimmedNew, "gymData") &&
+				!strings.Contains(trimmedNew, "locations:")) {
 			return existingContent // Keep existing content, ignore function additions
 		}
 		return applyJavaScriptUpdate(existingContent, newContent)
@@ -378,21 +394,21 @@ func applyPartialUpdate(existingContent, newContent, filename string) string {
 
 		// If HTML content is just a fragment without document structure, ignore it
 		if strings.HasSuffix(filename, ".html") &&
-		   !strings.Contains(trimmedNew, "<!DOCTYPE") &&
-		   !strings.Contains(trimmedNew, "<html") &&
-		   !strings.Contains(trimmedNew, "<head") &&
-		   !strings.Contains(trimmedNew, "<body") {
+			!strings.Contains(trimmedNew, "<!DOCTYPE") &&
+			!strings.Contains(trimmedNew, "<html") &&
+			!strings.Contains(trimmedNew, "<head") &&
+			!strings.Contains(trimmedNew, "<body") {
 			return existingContent // Keep existing content, ignore fragment
 		}
 
 		// If CSS content is mostly comments, instructions, or partial additions, ignore it
 		if strings.HasSuffix(filename, ".css") &&
-		   (strings.Contains(trimmedNew, "Remove these sections") ||
-		    strings.Contains(trimmedNew, "/* Remove") ||
-		    strings.Contains(trimmedNew, "/* Navigation Actions */") ||
-		    strings.Contains(trimmedNew, "/* Add this to") ||
-		    strings.Count(trimmedNew, "/*") > strings.Count(trimmedNew, "{") ||
-		    (!strings.Contains(trimmedNew, ":root") && !strings.Contains(trimmedNew, "* {") && len(strings.Split(trimmedNew, "\n")) < 100)) {
+			(strings.Contains(trimmedNew, "Remove these sections") ||
+				strings.Contains(trimmedNew, "/* Remove") ||
+				strings.Contains(trimmedNew, "/* Navigation Actions */") ||
+				strings.Contains(trimmedNew, "/* Add this to") ||
+				strings.Count(trimmedNew, "/*") > strings.Count(trimmedNew, "{") ||
+				(!strings.Contains(trimmedNew, ":root") && !strings.Contains(trimmedNew, "* {") && len(strings.Split(trimmedNew, "\n")) < 100)) {
 			return existingContent // Keep existing content, ignore partial additions/instructions
 		}
 	}

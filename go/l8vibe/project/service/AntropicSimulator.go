@@ -8,13 +8,13 @@ import (
 	"strings"
 
 	strings2 "github.com/saichler/l8utils/go/utils/strings"
-	"github.com/saichler/vibe.with.layer8/go/l8vibe/antropic"
+	"github.com/saichler/vibe.with.layer8/go/l8vibe/anthropic"
 	"github.com/saichler/vibe.with.layer8/go/types"
 )
 
 type AntropicSimulator struct {
 	steps []*RequestResponse
-	ai    *antropic.AnthropicClient
+	ai    *anthropic.AnthropicClient
 }
 
 type RequestResponse struct {
@@ -25,7 +25,7 @@ type RequestResponse struct {
 func NewAnthropicSimulator() *AntropicSimulator {
 	sim := &AntropicSimulator{}
 	sim.load()
-	sim.ai = antropic.NewAnthropicClient()
+	sim.ai = anthropic.NewAnthropicClient()
 	return sim
 }
 
@@ -66,7 +66,7 @@ func (this *AntropicSimulator) Do(text string, project *types.Project) error {
 		msg.Role = "assistant"
 		msg.Content = this.steps[step].respond
 		project.Messages = append(project.Messages, msg)
-		return antropic.ParseMessages(project)
+		return anthropic.ParseMessages(project)
 	}
 	return errors.New("End of Simulation")
 	err := this.ai.Do(text, project)
@@ -78,6 +78,6 @@ func (this *AntropicSimulator) Do(text string, project *types.Project) error {
 	os.WriteFile(reqFileName, []byte(text), 0777)
 	os.WriteFile(resFileName, []byte(project.Messages[len(project.Messages)-1].Content), 0777)
 
-	antropic.ParseMessages(project)
+	anthropic.ParseMessages(project)
 	return nil
 }
