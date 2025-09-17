@@ -62,6 +62,7 @@ func startWebServer(resources ifs.IResources) {
 
 	common.WebServer = svr.(*server.RestServer)
 	server.Timeout = 600
+	server.Method = ifs.M_Local
 
 	svr.Start()
 }
