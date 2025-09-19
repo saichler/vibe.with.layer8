@@ -126,7 +126,7 @@ func TestAnthropicResponse(t *testing.T) {
 }
 
 func TestAnthropicResponse1(t *testing.T) {
-	data, _ := os.ReadFile("design.dat")
+	data, _ := os.ReadFile("nvidia.dat")
 	project := &types.Project{}
 	proto.Unmarshal(data, project)
 	err := anthropic.ParseMessages(project)

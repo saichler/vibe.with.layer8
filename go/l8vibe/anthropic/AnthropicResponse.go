@@ -159,6 +159,32 @@ func ParseMessage(text string, project *types.Project) ([]string, error) {
 		}
 	}
 
+	// If no files were created, look for code blocks with just extensions
+	if len(result) == 0 {
+		// Pattern to match code blocks that start with just an extension like ```html, ```css, ```js
+		extensionPattern := regexp.MustCompile(`(?s)` + "```" + `(\w+)\s*\n(.*?)\n` + "```")
+		extensionMatches := extensionPattern.FindAllStringSubmatch(text, -1)
+
+		for _, match := range extensionMatches {
+			extension := match[1]
+			content := match[2]
+
+			// Skip if content is too short to be meaningful
+			if len(strings.TrimSpace(content)) < 10 {
+				continue
+			}
+
+			// Use "index" + extension as filename
+			filename := "index." + extension
+
+			if err := createFileWithPath(filename, content, project); err != nil {
+				return nil, fmt.Errorf("failed to create file %s: %v", filename, err)
+			}
+			basePath := filepath.Join(".", "web", "workspace", project.User, project.Name)
+			result = append(result, fmt.Sprintf("Created file: %s", filepath.Join(basePath, filename)))
+		}
+	}
+
 	// If no files were created, look for a simpler pattern
 	if len(result) == 0 {
 		// Look for lines that might indicate files like "index.html", "styles.css", etc.
