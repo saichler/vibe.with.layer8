@@ -650,6 +650,17 @@
                 <!-- Header -->
                 <header class="workspace-header">
                     <div class="header-content">
+                        <!-- Logo Section -->
+                        <div class="workspace-logo-section">
+                            <div class="workspace-logo-container">
+                                <div class="workspace-logo-icon">🌐</div>
+                                <div class="workspace-logo-text">
+                                    <h1 class="workspace-logo">www.l8vibe.dev</h1>
+                                    <span class="workspace-tagline">Powered by Layer 8 Ecosystem & AI</span>
+                                </div>
+                            </div>
+                            <div class="workspace-logo-separator"></div>
+                        </div>
                         <div class="project-info">
                             <div class="project-selector">
                                 <button id="workspaceProjectsBtn" class="project-selector-btn">
@@ -673,36 +684,6 @@
 
                 <!-- Main Content -->
                 <main class="workspace-main">
-                    <!-- Chat Panel -->
-                    <div class="chat-panel">
-                        <div class="chat-header">
-                            <h3>AI Collaboration</h3>
-                            <div class="chat-status">
-                                <div class="status-dot active"></div>
-                                <span>Connected</span>
-                            </div>
-                        </div>
-                        <div class="chat-messages" id="chatMessages">
-                            <div class="message ai-message">
-                                <div class="message-content">
-                                    <p>Welcome to your creative journey. I'm here to help you build your vision. What would you like to create today?</p>
-                                </div>
-                                <div class="message-time">Just now</div>
-                            </div>
-                        </div>
-                        <div class="chat-input-container">
-                            <div class="chat-input-group">
-                                <input type="text" id="chatInput" placeholder="Share your vision..." />
-                                <button id="sendChatBtn" class="send-button">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                                        <polygon points="22,2 15,22 11,13 2,9"></polygon>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Preview Panel -->
                     <div class="preview-panel">
                         <div class="preview-header">
@@ -725,6 +706,45 @@
                                 </div>
                                 <h4>Your Canvas Awaits</h4>
                                 <p>Start a conversation with AI to begin creating your web application</p>
+                            </div>
+                        </div>
+
+                        <!-- Resizable Separator -->
+                        <div class="resize-separator" id="resizeSeparator">
+                            <div class="resize-handle">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <!-- Chat Panel (now at bottom) -->
+                        <div class="chat-panel" id="chatPanel">
+                            <div class="chat-header">
+                                <h3>AI Collaboration</h3>
+                                <div class="chat-status">
+                                    <div class="status-dot active"></div>
+                                    <span>Connected</span>
+                                </div>
+                            </div>
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="message ai-message">
+                                    <div class="message-content">
+                                        <p>Welcome to your creative journey. I'm here to help you build your vision. What would you like to create today?</p>
+                                    </div>
+                                    <div class="message-time">Just now</div>
+                                </div>
+                            </div>
+                            <div class="chat-input-container">
+                                <div class="chat-input-group">
+                                    <input type="text" id="chatInput" placeholder="Share your vision..." />
+                                    <button id="sendChatBtn" class="send-button">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

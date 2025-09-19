@@ -10,6 +10,7 @@ class WorkspaceManager {
     init() {
         this.bindWorkspaceEvents();
         this.setupPreview();
+        this.initResizableChat();
     }
 
     // Bind workspace-related events
@@ -657,16 +658,92 @@ class WorkspaceManager {
 
             // Switch to the project
             this.setCurrentProject(project);
-            
+
             // Initialize chat for this project
             if (window.chat) {
                 chat.setCurrentProject(project);
             }
 
             console.log('Switched to project:', project.name);
-            
+
         } catch (error) {
             console.error('Error switching to project:', error);
         }
+    }
+
+    // Initialize resizable chat panel
+    initResizableChat() {
+        const separator = document.getElementById('resizeSeparator');
+        const chatPanel = document.getElementById('chatPanel');
+
+        if (!separator || !chatPanel) return;
+
+        let isResizing = false;
+
+        const handleMouseDown = (e) => {
+            isResizing = true;
+            separator.classList.add('dragging');
+            document.body.style.userSelect = 'none';
+            document.body.style.cursor = 'ns-resize';
+            e.preventDefault();
+        };
+
+        const handleMouseMove = (e) => {
+            if (!isResizing) return;
+
+            const workspaceMain = document.querySelector('.workspace-main');
+            const workspaceRect = workspaceMain.getBoundingClientRect();
+
+            // Calculate new height based on mouse position
+            const newHeight = workspaceRect.bottom - e.clientY;
+
+            // Set height with reasonable constraints
+            if (newHeight > 10 && newHeight < workspaceRect.height - 100) {
+                chatPanel.style.height = newHeight + 'px';
+            }
+
+            e.preventDefault();
+        };
+
+        const handleMouseUp = (e) => {
+            // Always cleanup if we were resizing
+            if (isResizing) {
+                isResizing = false;
+                separator.classList.remove('dragging');
+                document.body.style.userSelect = '';
+                document.body.style.cursor = '';
+
+                // Force remove any focus
+                separator.blur();
+
+                // Move focus to chat input
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) {
+                    chatInput.focus();
+                }
+            }
+        };
+
+        // Attach mousedown to separator
+        separator.addEventListener('mousedown', handleMouseDown);
+
+        // Attach mousemove and mouseup to document to catch all events
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        // Also catch if mouse leaves the window
+        document.addEventListener('mouseleave', (e) => {
+            // If mouse leaves the document while dragging, stop the resize
+            if (isResizing && !e.buttons) {
+                handleMouseUp(e);
+            }
+        });
+
+        // Catch escape key to cancel resize
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isResizing) {
+                handleMouseUp(e);
+            }
+        });
     }
 }

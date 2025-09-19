@@ -4,7 +4,9 @@ import (
 	"os"
 
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8api"
+	"github.com/saichler/l8types/go/types/l8health"
+	"github.com/saichler/l8types/go/types/l8web"
 	"github.com/saichler/l8web/go/web/server"
 	"github.com/saichler/layer8/go/overlay/health"
 	"github.com/saichler/layer8/go/overlay/protocol"
@@ -68,9 +70,9 @@ func startWebServer(resources ifs.IResources) {
 }
 
 func registerTypes(resources ifs.IResources) {
-	resources.Registry().Register(&types.Query{})
-	resources.Registry().Register(&types.Top{})
-	resources.Registry().Register(&types.Empty{})
+	resources.Registry().Register(&l8api.L8Query{})
+	resources.Registry().Register(&l8health.L8Top{})
+	resources.Registry().Register(&l8web.L8Empty{})
 	resources.Registry().Register(&types2.Project{})
 	resources.Registry().Register(&types2.ProjectList{})
 	resources.Introspector().Inspect(&types2.Project{})

@@ -1,0 +1,13 @@
+https://github.com/saichler/l8types
+https://github.com/saichler/l8utils
+https://github.com/saichler/layer8
+https://github.com/saichler/l8services
+https://github.com/saichler/l8srlz
+https://github.com/saichler/reflect
+https://github.com/saichler/gsql
+https://github.com/saichler/l8web
+https://github.com/saichler/l8orm
+https://github.com/saichler/l8pollaris
+https://github.com/saichler/l8collector
+https://github.com/saichler/l8parser
+https://github.com/saichler/l8inventory

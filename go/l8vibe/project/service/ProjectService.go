@@ -9,7 +9,7 @@ import (
 	"github.com/saichler/l8services/go/services/dcache"
 	"github.com/saichler/l8srlz/go/serialize/object"
 	"github.com/saichler/l8types/go/ifs"
-	types2 "github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8utils/go/utils/strings"
 	"github.com/saichler/l8utils/go/utils/web"
 	"github.com/saichler/reflect/go/reflect/introspecting"
@@ -36,7 +36,7 @@ type ProjectService struct {
 func (this *ProjectService) Activate(serviceName string, serviceArea byte, resources ifs.IResources, listener ifs.IServiceCacheListener, args ...interface{}) error {
 	resources.Registry().Register(&types.Project{})
 	resources.Registry().Register(&types.ProjectList{})
-	resources.Registry().Register(&types2.Query{})
+	resources.Registry().Register(&l8api.L8Query{})
 	node, _ := resources.Introspector().Inspect(&types.Project{})
 	introspecting.AddPrimaryKeyDecorator(node, "User", "Name")
 	initData := this.load(resources)
@@ -246,7 +246,7 @@ func (this *ProjectService) TransactionConfig() ifs.ITransactionConfig {
 // WebService returns the web service
 func (this *ProjectService) WebService() ifs.IWebService {
 	ws := web.New(ServiceName, ServiceArea, &types.Project{},
-		&types.Project{}, nil, nil, &types.Project{}, &types.Project{}, nil, nil, &types2.Query{}, &types.ProjectList{})
+		&types.Project{}, nil, nil, &types.Project{}, &types.Project{}, nil, nil, &l8api.L8Query{}, &types.ProjectList{})
 	return ws
 }
 

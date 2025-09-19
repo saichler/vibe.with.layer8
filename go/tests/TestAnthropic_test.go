@@ -9,7 +9,8 @@ import (
 	"github.com/saichler/l8services/go/services/manager"
 	"github.com/saichler/l8srlz/go/serialize/object"
 	"github.com/saichler/l8types/go/ifs"
-	types2 "github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8notify"
+	"github.com/saichler/l8types/go/types/l8sysconfig"
 	"github.com/saichler/l8utils/go/utils/logger"
 	"github.com/saichler/l8utils/go/utils/registry"
 	"github.com/saichler/l8utils/go/utils/resources"
@@ -35,7 +36,7 @@ func Resources(alias string, vnetPort uint32) ifs.IResources {
 	}
 	res.Set(sec)
 
-	conf := &types2.SysConfig{MaxDataSize: resources.DEFAULT_MAX_DATA_SIZE,
+	conf := &l8sysconfig.L8SysConfig{MaxDataSize: resources.DEFAULT_MAX_DATA_SIZE,
 		RxQueueSize:              resources.DEFAULT_QUEUE_SIZE,
 		TxQueueSize:              resources.DEFAULT_QUEUE_SIZE,
 		LocalAlias:               alias,
@@ -165,7 +166,7 @@ func TestSimulator(t *testing.T) {
 type cacheListen struct {
 }
 
-func (this *cacheListen) PropertyChangeNotification(set *types2.NotificationSet) {
+func (this *cacheListen) PropertyChangeNotification(set *l8notify.L8NotificationSet) {
 
 }
 
